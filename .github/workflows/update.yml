@@ -1,1 +1,70 @@
+name: Update Dashboard Data
+
+on:
+  schedule:
+    # Setiap hari pukul 01:00 WITA (17:00 UTC hari sebelumnya)
+    - cron: "0 17 * * *"
+  workflow_dispatch: {}   # bisa dijalankan manual dari tab Actions
+  push:
+    branches: [main]
+    paths:
+      - "scripts/scrape.py"
+      - "docs/**"
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  scrape-and-update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r scripts/requirements.txt
+
+      - name: Jalankan scraping
+        run: python scripts/scrape.py
+
+      - name: Commit & push data terbaru
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/data.json
+          git diff --staged --quiet || git commit -m "chore: update data review otomatis ($(date '+%Y-%m-%d %H:%M'))"
+          git push
+
+  deploy-pages:
+    needs: scrape-and-update
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "docs"
+
+      - name: Deploy ke GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
 
