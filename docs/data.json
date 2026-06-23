@@ -1,30 +1,30 @@
 {
-  "last_updated": "2026-06-23T04:17:07.019828",
+  "last_updated": "2026-06-23T07:40:46.640964",
   "app_info": {
-    "title": "Disdukcapil Berau",
-    "developer": "Pemkab Berau",
-    "score": 3.87,
-    "ratings": 465,
+    "title": "DISDUKCAPIL BERAU",
+    "developer": "DISDUKCAPIL BERAU",
+    "score": 4.05,
+    "ratings": 808,
     "version": "3.0.3",
-    "installs": "10,000+"
+    "installs": "100.000+"
   },
   "periode": {
     "mulai": "2019-11-11",
-    "selesai": "2026-05-17"
+    "selesai": "2026-06-08"
   },
-  "total_review": 465,
+  "total_review": 467,
   "rata_rata_bintang": 3.87,
   "distribusi_bintang": {
     "1": 89,
     "2": 26,
     "3": 25,
     "4": 42,
-    "5": 283
+    "5": 285
   },
   "distribusi_sentimen": {
-    "Positif": 325,
-    "Netral": 25,
-    "Negatif": 115
+    "Positif": 327,
+    "Negatif": 115,
+    "Netral": 25
   },
   "tren_per_tahun": [
     {
@@ -71,7 +71,7 @@
     },
     {
       "tahun": 2026,
-      "Positif": 4,
+      "Positif": 6,
       "Netral": 0,
       "Negatif": 2
     }
@@ -84,47 +84,186 @@
     "2023": 3.67,
     "2024": 2.95,
     "2025": 3.6,
-    "2026": 3.5
+    "2026": 3.88
   },
   "frekuensi_kategori": {
-    "Pujian Umum": 216,
+    "Pujian Umum": 218,
     "Kemudahan Aplikasi": 95,
-    "Kecepatan Proses": 86,
-    "Lainnya": 82,
-    "Dokumen": 71,
-    "Pelayanan": 68,
-    "Error / Bug": 60,
+    "Kecepatan Proses": 87,
+    "Lainnya": 84,
+    "Pelayanan": 69,
+    "Login / Akun": 64,
+    "Error / Bug": 57,
+    "Dokumen": 36,
+    "Update / Versi": 33,
     "KTP / e-KTP": 26,
+    "Kartu Keluarga": 24,
     "Akta Kelahiran": 8
   },
   "responsivitas_developer": {
     "Ya": 61,
-    "Tidak": 404
+    "Tidak": 406
   },
   "sample_reviews": [
+    {
+      "nama": "Neng Fitri",
+      "isi": "saya puas dengan pelayanan dan kecepatan peroses pembuatan nya, Capil Berau memang top.",
+      "bintang": 5,
+      "tanggal": "2026-06-08 06:57:27",
+      "likes": 0,
+      "versi": "3.0.3"
+    },
+    {
+      "nama": "riswan 207",
+      "isi": "bagus",
+      "bintang": 5,
+      "tanggal": "2026-05-21 05:14:45",
+      "likes": 0,
+      "versi": "3.0.3"
+    },
+    {
+      "nama": "Dandi Jie",
+      "isi": "KTP fisik saya hilang sementara saya berada di Sulawesi, min bantu donk",
+      "bintang": 5,
+      "tanggal": "2026-05-17 04:09:16",
+      "likes": 0,
+      "versi": "3.0.3"
+    },
     {
       "nama": "Weli Yanti",
       "isi": "baik",
       "bintang": 5,
-      "tanggal": "2026-03-11",
+      "tanggal": "2026-03-11 02:52:59",
       "likes": 0,
       "versi": "3.0.3"
     },
     {
       "nama": "Like Boss",
-      "isi": "untuk aplikasi sdh bagus, tetapi dalam pelayanan pertama saja sdh membingungkan entah itu disuruh cari dokumen 2tahun lalu",
+      "isi": "untuk aplikasi sdh bagus, tetapi dalam pelayanan pertama saja sdh membingungkan entah itu disuruh cari dokumen 2tahun lalu, 3/4 tahun lalu jika tidak ada dokumen baru tidak akan terbit",
       "bintang": 1,
-      "tanggal": "2026-03-02",
-      "likes": 1,
+      "tanggal": "2026-03-02 02:38:21",
+      "likes": 2,
       "versi": "3.0.3"
     },
     {
-      "nama": "KRIMINAL 24 JAM",
+      "nama": "Mr Kahar",
       "isi": "kenapa sangat lama upload KTP digital",
       "bintang": 4,
-      "tanggal": "2026-02-10",
+      "tanggal": "2026-02-10 00:37:39",
       "likes": 0,
       "versi": "3.0.3"
+    },
+    {
+      "nama": "Natalius Paramme",
+      "isi": "aplikasi eror terus, upload dokumen gak bisa, tidak ada pemberitahuan gagal upload karna apa (kebesaran kah atau format tidak di dukung), susah untuk kaum awam",
+      "bintang": 1,
+      "tanggal": "2026-01-27 03:43:13",
+      "likes": 0,
+      "versi": "3.0.3"
+    },
+    {
+      "nama": "Taurus Boy",
+      "isi": "Pelayanan mudah,simpel dan cepat untuk warga Berau. Tetaplah selalu di pertahankan dan makin di tingkatkan 🙏",
+      "bintang": 5,
+      "tanggal": "2026-01-21 00:52:16",
+      "likes": 0,
+      "versi": "3.0.3"
+    },
+    {
+      "nama": "Sobastianus Sibastianus",
+      "isi": "The best",
+      "bintang": 5,
+      "tanggal": "2025-11-25 00:31:29",
+      "likes": 0,
+      "versi": "3.0.3"
+    },
+    {
+      "nama": "Ahmad Suhada",
+      "isi": "aplikasi boomer ya gini. pisah kk online suruh instal ini aplikasi persyaratan udah di isiiii semua . menu pilihan kelurahan cuman twrbatas dan gak tau itu dimana. ini gimana coba. pantes dukcapil isinya cuman CALOOOOO DOANG, APLIKASI SE RECEH INI AJA GA BECUS KERJAAN NYA. SESIMPLE PILIHAN KELURAHAN KECAMATAN ISINYA CUMAN 7 BIJI DOANG. payah banget",
+      "bintang": 1,
+      "tanggal": "2025-11-24 05:04:08",
+      "likes": 2,
+      "versi": "3.0.3"
+    },
+    {
+      "nama": "rinaa risna",
+      "isi": "aplikasi yg sangat membatu, hnya dari rumah, smua langsung jadi terimakasih Ats sglanya, skg sya sdah pindah kota, dan dgan berat hati sya akan uninstall, soalnya sya sdah tdak d Berau lagi sekali lagi aplikasi ini sgt membantu",
+      "bintang": 5,
+      "tanggal": "2025-08-14 09:14:13",
+      "likes": 0,
+      "versi": "3.0.1"
+    },
+    {
+      "nama": "Adilla Putry",
+      "isi": "saya sangat senang memakai aplikasi DISDUKCAPIL BERAU ini sangat membantu saya",
+      "bintang": 5,
+      "tanggal": "2025-07-28 01:19:43",
+      "likes": 0,
+      "versi": "3.0.2"
+    },
+    {
+      "nama": "Moh Kumar",
+      "isi": "mantap",
+      "bintang": 5,
+      "tanggal": "2025-07-17 13:53:27",
+      "likes": 0,
+      "versi": NaN
+    },
+    {
+      "nama": "Sandika Artalios",
+      "isi": "mantap mempermudah penduduk untuk mengurus persuratan KK KTP AKTE KIA DLL",
+      "bintang": 5,
+      "tanggal": "2025-07-10 12:06:26",
+      "likes": 0,
+      "versi": NaN
+    },
+    {
+      "nama": "HART T",
+      "isi": "ttd elektrik online yg jdi kendala krn paling lama prosesnya, di luar negeri mungkin urusan bgini 5-10 menit kelar, klo di Indonesia khususnya Berau, pagi masukkan berkas, tutup layanan belum jadi jadi. entah ngapain aja kadisnya itu ttd elektronik aja nga kelar kelar",
+      "bintang": 1,
+      "tanggal": "2025-07-09 07:18:11",
+      "likes": 0,
+      "versi": "3.0.2"
+    },
+    {
+      "nama": "Ridwan Syam",
+      "isi": "sangat membantu saya terima kasih *****",
+      "bintang": 5,
+      "tanggal": "2025-06-03 11:20:11",
+      "likes": 0,
+      "versi": "3.0.2"
+    },
+    {
+      "nama": "Guna",
+      "isi": "MANTAP,GAK BIKIN CAPE ANTRI",
+      "bintang": 4,
+      "tanggal": "2025-05-26 03:32:16",
+      "likes": 0,
+      "versi": "3.0.2"
+    },
+    {
+      "nama": "Roni Khoironi",
+      "isi": "petugas terlalu menggampangkan pembuat berkas, setiap datang tidak diberikan informasi yang detail terkait syarat dan ketentuan sehiangga pembuat harus bulak balik hanya untuk memenuhi syarat karna tidak dijelaskan dari awal. tolong diperbaiki lagi jangan menyepelekan",
+      "bintang": 1,
+      "tanggal": "2025-05-26 02:46:58",
+      "likes": 3,
+      "versi": "3.0.2"
+    },
+    {
+      "nama": "Andini Indria Sari",
+      "isi": "apakah aplikasi hanya untuk pengguna android? tidak ditemukan di app store iphone",
+      "bintang": 3,
+      "tanggal": "2025-05-08 01:34:52",
+      "likes": 0,
+      "versi": "3.0.1"
+    },
+    {
+      "nama": "arfuzi bungas",
+      "isi": "sekarang Mao lancar amplikasi tergantung versi androidnya.. sedih jika hp lama versi 11 ke bawah.tak berfungsi...",
+      "bintang": 5,
+      "tanggal": "2025-04-17 02:55:57",
+      "likes": 2,
+      "versi": "3.0.1"
     }
   ]
 }
