@@ -133,8 +133,10 @@ def main() -> None:
 
     # ── Sample review terbaru (untuk tabel di dashboard) ─────────────────
     sample_cols = ["userName", "content", "score", "at", "thumbsUpCount", "reviewCreatedVersion"]
-    df_sample = df.sort_values("at", ascending=False)[sample_cols].head(20)
+    df_sample = df.sort_values("at", ascending=False)[sample_cols].head(20).copy()
     df_sample["at"] = df_sample["at"].astype(str)
+    # Ganti semua NaN/NaT dengan None agar valid sebagai JSON (NaN bukan JSON yang sah)
+    df_sample = df_sample.where(pd.notnull(df_sample), None)
     sample_reviews = df_sample.rename(
         columns={
             "userName": "nama",
