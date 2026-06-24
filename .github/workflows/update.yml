@@ -8,8 +8,9 @@ on:
   push:
     branches: [main]
     paths:
-      - "scripts/scrape.py"
-      - "docs/**"
+      - "scripts/scrape.py"   # hanya trigger saat script-nya sendiri diedit
+      # (sengaja TIDAK menyertakan docs/** agar tidak memicu diri sendiri
+      #  setiap kali bot commit data.json)
 
 permissions:
   contents: write
@@ -17,7 +18,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "pages"
+  group: "scrape-and-update"   # cegah 2 run scraping jalan bersamaan
   cancel-in-progress: false
 
 jobs:
@@ -43,12 +44,26 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add docs/data.json
-          git diff --staged --quiet || git commit -m "chore: update data review otomatis ($(date '+%Y-%m-%d %H:%M'))"
-          git push
+          git diff --staged --quiet && { echo "Tidak ada perubahan data, lewati commit."; exit 0; }
+          git commit -m "chore: update data review otomatis ($(date '+%Y-%m-%d %H:%M'))"
+
+          # Coba push, jika ditolak karena remote berubah duluan, pull --rebase lalu coba lagi
+          for i in 1 2 3 4 5; do
+            if git push; then
+              echo "Push berhasil."
+              break
+            fi
+            echo "Push ditolak, mencoba pull --rebase (percobaan $i)..."
+            git pull --rebase origin main
+            sleep $((RANDOM % 5 + 2))
+          done
 
   deploy-pages:
     needs: scrape-and-update
     runs-on: ubuntu-latest
+    concurrency:
+      group: "pages"
+      cancel-in-progress: false
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -67,4 +82,3 @@ jobs:
       - name: Deploy ke GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-
