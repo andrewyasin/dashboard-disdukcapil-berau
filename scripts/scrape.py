@@ -64,6 +64,19 @@ def kategorisasi(teks: str) -> str:
     return ", ".join(hasil) if hasil else "Lainnya"
 
 
+def sanitize_for_json(obj):
+    """Ganti semua NaN/NaT/Inf menjadi None secara rekursif agar selalu valid JSON."""
+    if isinstance(obj, dict):
+        return {k: sanitize_for_json(v) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [sanitize_for_json(v) for v in obj]
+    if isinstance(obj, float) and (pd.isna(obj) or obj in (float("inf"), float("-inf"))):
+        return None
+    if pd.isna(obj) if not isinstance(obj, (list, dict)) else False:
+        return None
+    return obj
+
+
 def main() -> None:
     print(f"[{datetime.now()}] Mulai scraping aplikasi: {APP_ID}")
 
@@ -174,8 +187,10 @@ def main() -> None:
         "sample_reviews": sample_reviews,
     }
 
+    output = sanitize_for_json(output)
+
     with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
-        json.dump(output, f, ensure_ascii=False, indent=2)
+        json.dump(output, f, ensure_ascii=False, indent=2, allow_nan=False)
 
     print(f"[{datetime.now()}] Data berhasil disimpan ke {OUTPUT_PATH}")
 
