@@ -9,15 +9,15 @@
 <script src="chart.umd.min.js"></script>
 <style>
   :root{
-    --ink:#1B2A4A;
-    --ink-soft:#3A4A6B;
-    --paper:#F7F1E3;
-    --paper-deep:#EFE6D2;
+    --ink:#0B3D24;
+    --ink-soft:#3F6B52;
+    --paper:#F8F6EC;
+    --paper-deep:#EFE9D2;
     --stamp-red:#C1442D;
-    --sawah-green:#3D7A5C;
-    --kuningan:#C9A86A;
-    --line:#D8CBA8;
-    --shadow: 0 2px 0 rgba(27,42,74,0.06);
+    --sawah-green:#00923F;
+    --kuningan:#E8B900;
+    --line:#D9CFA0;
+    --shadow: 0 2px 0 rgba(11,61,36,0.07);
   }
   *{box-sizing:border-box;}
   body{
@@ -42,22 +42,6 @@
     align-items:flex-end;
     gap:24px;
     flex-wrap:wrap;
-  }
-  .kop-brand{
-    display:flex;
-    align-items:flex-start;
-    gap:18px;
-  }
-  .logo-badge{
-    width:64px;
-    height:64px;
-    flex-shrink:0;
-    margin-top:4px;
-  }
-  .logo-badge svg{
-    width:100%;
-    height:100%;
-    display:block;
   }
   .kop-eyebrow{
     font-family:'IBM Plex Mono', monospace;
@@ -101,17 +85,17 @@
   .stempel{
     width:128px;height:128px;
     border-radius:50%;
-    border:3px solid var(--stamp-red);
+    border:3px solid var(--sawah-green);
     display:flex;
     flex-direction:column;
     align-items:center;
     justify-content:center;
-    color:var(--stamp-red);
+    color:var(--sawah-green);
     transform:rotate(-7deg);
     flex-shrink:0;
     position:relative;
     background:
-      radial-gradient(circle, rgba(193,68,45,0.06), transparent 70%);
+      radial-gradient(circle, rgba(0,146,63,0.07), transparent 70%);
     opacity:0;
     animation:stamp-in 0.5s 0.15s cubic-bezier(.2,1.4,.4,1) forwards;
   }
@@ -119,7 +103,7 @@
     content:'';
     position:absolute;
     inset:8px;
-    border:1px solid var(--stamp-red);
+    border:1px solid var(--sawah-green);
     border-radius:50%;
     opacity:0.55;
   }
@@ -322,40 +306,10 @@
 <div class="wrap">
 
   <div class="kop">
-    <div class="kop-brand">
-      <div class="logo-badge" aria-label="Lambang Kabupaten Berau">
-        <svg viewBox="0 0 100 110" xmlns="http://www.w3.org/2000/svg">
-          <!-- bentuk perisai -->
-          <path d="M50 4 L92 16 V56 C92 82 74 98 50 106 C26 98 8 82 8 56 V16 Z"
-                fill="#F2C84B" stroke="#1B2A4A" stroke-width="2.5"/>
-          <path d="M50 4 L92 16 V56 C92 82 74 98 50 106 C26 98 8 82 8 56 V16 Z"
-                fill="none" stroke="#3D7A5C" stroke-width="5" stroke-dasharray="0" opacity="0.0"/>
-          <!-- pita hijau atas -->
-          <path d="M50 4 L92 16 V32 C78 26 64 23 50 23 C36 23 22 26 8 32 V16 Z" fill="#3D7A5C"/>
-          <!-- bintang -->
-          <path d="M50 9 L52.6 15.6 L59.6 15.8 L54 20 L56 26.8 L50 22.8 L44 26.8 L46 20 L40.4 15.8 L47.4 15.6 Z" fill="#F2C84B"/>
-          <!-- penyu, motif khas & satu-satunya di Indonesia -->
-          <g transform="translate(50,64)">
-            <ellipse cx="0" cy="0" rx="26" ry="19" fill="#1B2A4A"/>
-            <ellipse cx="0" cy="0" rx="26" ry="19" fill="none" stroke="#F2C84B" stroke-width="1.4"/>
-            <path d="M0 -19 L0 19 M-17 -12 L-17 12 M17 -12 L17 12 M-26 0 L26 0"
-                  stroke="#F2C84B" stroke-width="0.9" opacity="0.85"/>
-            <path d="M-21 -4 L-27 -12 M-15 -12 L-18 -19 M15 -12 L18 -19 M21 -4 L27 -12
-                     M-21 4 L-28 9 M21 4 L28 9 M-10 13 L-12 19 M10 13 L12 19"
-                  stroke="#1B2A4A" stroke-width="2.2" stroke-linecap="round"/>
-            <path d="M-21 -4 L-27 -12 M-15 -12 L-18 -19 M15 -12 L18 -19 M21 -4 L27 -12
-                     M-21 4 L-28 9 M21 4 L28 9 M-10 13 L-12 19 M10 13 L12 19"
-                  stroke="#F2C84B" stroke-width="0.8" stroke-linecap="round"/>
-          </g>
-          <!-- pita bawah kuning -->
-          <path d="M14 84 C26 95 38 101 50 104 C62 101 74 95 86 84 C74 89 62 92 50 92 C38 92 26 89 14 84 Z" fill="#1B2A4A"/>
-        </svg>
-      </div>
-      <div>
-        <p class="kop-eyebrow">Pemerintah Kabupaten Berau</p>
-        <h1>Dasbor Ulasan Publik<br>Aplikasi Disdukcapil Berau</h1>
-        <p class="sub">Pemantauan ulasan pengguna aplikasi layanan kependudukan digital Kabupaten Berau, dihimpun otomatis dari Google Play Store.</p>
-      </div>
+    <div>
+      <p class="kop-eyebrow">Pemerintah Kabupaten Berau</p>
+      <h1>Dasbor Ulasan Publik<br>Aplikasi Disdukcapil Berau</h1>
+      <p class="sub">Pemantauan ulasan pengguna aplikasi layanan kependudukan digital Kabupaten Berau, dihimpun otomatis dari Google Play Store.</p>
     </div>
     <div class="meta-block">
       <div>Sumber: <strong>Google Play Store</strong></div>
@@ -466,12 +420,12 @@
 
 <script>
 const PALET = {
-  ink:'#1B2A4A', inkSoft:'#3A4A6B', stamp:'#C1442D', sawah:'#3D7A5C', kuningan:'#C9A86A',
-  bintang:['#C1442D','#D9824F','#C9A86A','#7FA98C','#3D7A5C']
+  ink:'#0B3D24', inkSoft:'#3F6B52', stamp:'#C1442D', sawah:'#00923F', kuningan:'#E8B900',
+  bintang:['#C1442D','#D9824F','#E8B900','#5FA86E','#00923F']
 };
 
 Chart.defaults.font.family = "'IBM Plex Sans', sans-serif";
-Chart.defaults.color = '#3A4A6B';
+Chart.defaults.color = '#3F6B52';
 Chart.defaults.borderColor = '#D8CBA8';
 
 async function muatData(){
