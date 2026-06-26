@@ -47,7 +47,7 @@ git push -u origin main
 
 Setelah itu, dashboard otomatis bisa diakses di:
 ```
-https://andrewyasin.github.io/dashboard-disdukcapil-berau/
+https://<username-anda>.github.io/dashboard-disdukcapil-berau/
 ```
 
 ---
