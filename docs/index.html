@@ -43,6 +43,22 @@
     gap:24px;
     flex-wrap:wrap;
   }
+  .kop-brand{
+    display:flex;
+    align-items:flex-start;
+    gap:18px;
+  }
+  .logo-badge{
+    width:64px;
+    height:64px;
+    flex-shrink:0;
+    margin-top:4px;
+  }
+  .logo-badge svg{
+    width:100%;
+    height:100%;
+    display:block;
+  }
   .kop-eyebrow{
     font-family:'IBM Plex Mono', monospace;
     font-size:11px;
@@ -308,19 +324,31 @@
   <div class="kop">
     <div class="kop-brand">
       <div class="logo-badge" aria-label="Lambang Kabupaten Berau">
-        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="50" cy="50" r="48" fill="#1B2A4A"/>
-          <circle cx="50" cy="50" r="48" fill="none" stroke="#C9A86A" stroke-width="2.5"/>
-          <circle cx="50" cy="50" r="41" fill="none" stroke="#C9A86A" stroke-width="1"/>
+        <svg viewBox="0 0 100 110" xmlns="http://www.w3.org/2000/svg">
+          <!-- bentuk perisai -->
+          <path d="M50 4 L92 16 V56 C92 82 74 98 50 106 C26 98 8 82 8 56 V16 Z"
+                fill="#F2C84B" stroke="#1B2A4A" stroke-width="2.5"/>
+          <path d="M50 4 L92 16 V56 C92 82 74 98 50 106 C26 98 8 82 8 56 V16 Z"
+                fill="none" stroke="#3D7A5C" stroke-width="5" stroke-dasharray="0" opacity="0.0"/>
+          <!-- pita hijau atas -->
+          <path d="M50 4 L92 16 V32 C78 26 64 23 50 23 C36 23 22 26 8 32 V16 Z" fill="#3D7A5C"/>
           <!-- bintang -->
-          <path d="M50 14 L53.5 24.5 L64.5 24.5 L55.5 31 L59 41.5 L50 35 L41 41.5 L44.5 31 L35.5 24.5 L46.5 24.5 Z" fill="#C9A86A"/>
-          <!-- penyu (motif khas Berau) -->
-          <g transform="translate(50,60)">
-            <ellipse cx="0" cy="0" rx="22" ry="16" fill="#3D7A5C" stroke="#C9A86A" stroke-width="1.2"/>
-            <path d="M-18 -3 L-22 -10 M-13 -10 L-15 -16 M13 -10 L15 -16 M18 -3 L22 -10 M-18 10 L-23 14 M18 10 L23 14" stroke="#C9A86A" stroke-width="2" stroke-linecap="round"/>
-            <ellipse cx="0" cy="0" rx="22" ry="16" fill="none" stroke="#142038" stroke-width="0.8" opacity="0.4"/>
-            <path d="M0 -16 L0 16 M-15 -10 L-15 10 M15 -10 L15 10 M-22 0 L22 0" stroke="#142038" stroke-width="0.6" opacity="0.35"/>
+          <path d="M50 9 L52.6 15.6 L59.6 15.8 L54 20 L56 26.8 L50 22.8 L44 26.8 L46 20 L40.4 15.8 L47.4 15.6 Z" fill="#F2C84B"/>
+          <!-- penyu, motif khas & satu-satunya di Indonesia -->
+          <g transform="translate(50,64)">
+            <ellipse cx="0" cy="0" rx="26" ry="19" fill="#1B2A4A"/>
+            <ellipse cx="0" cy="0" rx="26" ry="19" fill="none" stroke="#F2C84B" stroke-width="1.4"/>
+            <path d="M0 -19 L0 19 M-17 -12 L-17 12 M17 -12 L17 12 M-26 0 L26 0"
+                  stroke="#F2C84B" stroke-width="0.9" opacity="0.85"/>
+            <path d="M-21 -4 L-27 -12 M-15 -12 L-18 -19 M15 -12 L18 -19 M21 -4 L27 -12
+                     M-21 4 L-28 9 M21 4 L28 9 M-10 13 L-12 19 M10 13 L12 19"
+                  stroke="#1B2A4A" stroke-width="2.2" stroke-linecap="round"/>
+            <path d="M-21 -4 L-27 -12 M-15 -12 L-18 -19 M15 -12 L18 -19 M21 -4 L27 -12
+                     M-21 4 L-28 9 M21 4 L28 9 M-10 13 L-12 19 M10 13 L12 19"
+                  stroke="#F2C84B" stroke-width="0.8" stroke-linecap="round"/>
           </g>
+          <!-- pita bawah kuning -->
+          <path d="M14 84 C26 95 38 101 50 104 C62 101 74 95 86 84 C74 89 62 92 50 92 C38 92 26 89 14 84 Z" fill="#1B2A4A"/>
         </svg>
       </div>
       <div>
@@ -430,7 +458,7 @@
   </div>
 
   <footer>
-    <span>Dibangun untuk mendukung penilaian EPSS &mdash; Aspek 50303 Pemanfaatan Big Data</span>
+    <span>Dasbor Ulasan Aplikasi Disdukcapil Kabupaten Berau</span>
     <span>Data diperbarui otomatis harian via <code>GitHub Actions</code></span>
   </footer>
 
