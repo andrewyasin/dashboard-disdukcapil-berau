@@ -141,3 +141,9 @@ diambil melalui `google-play-scraper`. Dashboard ini disusun untuk
 mendukung **Pemanfaatan Big Data** sesuai Aspek 50303 EPSS BPS, dengan
 karakteristik *Volume* (ratusan ulasan), *Variety* (teks, rating, metadata),
 dan *Velocity* (data diperbarui harian secara otomatis).
+
+## 📝 Lisensi
+
+Bebas digunakan dan dimodifikasi untuk keperluan pemerintahan daerah di Indonesia.
+
+Dibuat oleh **Diskominfo Kabupaten Berau** · Kalimantan Timur
