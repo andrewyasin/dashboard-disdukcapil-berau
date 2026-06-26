@@ -3,8 +3,7 @@
 Dashboard publik yang menampilkan analisis ulasan pengguna aplikasi
 Disdukcapil Kabupaten Berau dari Google Play Store. Data diperbarui
 **otomatis setiap hari** melalui GitHub Actions dan ditampilkan via
-GitHub Pages — mendukung pemenuhan **Aspek 50303 (Pemanfaatan Big Data)**
-pada penilaian EPSS/IPS BPS.
+GitHub Pages
 
 🔗 **Demo:** [andrewyasin.github.io/dashboard-disdukcapil-berau](https://andrewyasin.github.io/dashboard-disdukcapil-berau/)
 
@@ -137,10 +136,7 @@ dashboard-disdukcapil-berau/
 ## 📊 Tentang Data
 
 Sumber: ulasan publik aplikasi Disdukcapil Berau di Google Play Store,
-diambil melalui `google-play-scraper`. Dashboard ini disusun untuk
-mendukung **Pemanfaatan Big Data** sesuai Aspek 50303 EPSS BPS, dengan
-karakteristik *Volume* (ratusan ulasan), *Variety* (teks, rating, metadata),
-dan *Velocity* (data diperbarui harian secara otomatis).
+diambil melalui `google-play-scraper`.
 
 ## 📝 Lisensi
 
