@@ -1,21 +1,21 @@
 {
-  "last_updated": "2026-07-01T18:58:36.999784",
+  "last_updated": "2026-07-02T18:24:53.323985",
   "app_info": {
     "title": "DISDUKCAPIL BERAU",
     "developer": "DISDUKCAPIL BERAU",
-    "score": 4.05,
-    "ratings": 808,
+    "score": 4.02,
+    "ratings": 809,
     "version": "3.0.3",
     "installs": "100.000+"
   },
   "periode": {
     "mulai": "2019-11-11",
-    "selesai": "2026-06-08"
+    "selesai": "2026-07-01"
   },
-  "total_review": 467,
+  "total_review": 468,
   "rata_rata_bintang": 3.87,
   "distribusi_bintang": {
-    "1": 89,
+    "1": 90,
     "2": 26,
     "3": 25,
     "4": 42,
@@ -23,7 +23,7 @@
   },
   "distribusi_sentimen": {
     "Positif": 327,
-    "Negatif": 115,
+    "Negatif": 116,
     "Netral": 25
   },
   "tren_per_tahun": [
@@ -73,7 +73,7 @@
       "tahun": 2026,
       "Positif": 6,
       "Netral": 0,
-      "Negatif": 2
+      "Negatif": 3
     }
   ],
   "avg_bintang_per_tahun": {
@@ -84,13 +84,13 @@
     "2023": 3.67,
     "2024": 2.95,
     "2025": 3.6,
-    "2026": 3.88
+    "2026": 3.56
   },
   "frekuensi_kategori": {
     "Pujian Umum": 218,
     "Kemudahan Aplikasi": 95,
     "Kecepatan Proses": 87,
-    "Lainnya": 84,
+    "Lainnya": 85,
     "Pelayanan": 69,
     "Login / Akun": 64,
     "Error / Bug": 57,
@@ -102,9 +102,17 @@
   },
   "responsivitas_developer": {
     "Ya": 61,
-    "Tidak": 406
+    "Tidak": 407
   },
   "sample_reviews": [
+    {
+      "nama": "rian mandalika",
+      "isi": "aplikasi jelek gak bisa di pakai,.",
+      "bintang": 1,
+      "tanggal": "2026-07-01 06:38:08",
+      "likes": 0,
+      "versi": "3.0.3"
+    },
     {
       "nama": "Neng Fitri",
       "isi": "saya puas dengan pelayanan dan kecepatan peroses pembuatan nya, Capil Berau memang top.",
@@ -255,14 +263,6 @@
       "bintang": 3,
       "tanggal": "2025-05-08 01:34:52",
       "likes": 0,
-      "versi": "3.0.1"
-    },
-    {
-      "nama": "arfuzi bungas",
-      "isi": "sekarang Mao lancar amplikasi tergantung versi androidnya.. sedih jika hp lama versi 11 ke bawah.tak berfungsi...",
-      "bintang": 5,
-      "tanggal": "2025-04-17 02:55:57",
-      "likes": 2,
       "versi": "3.0.1"
     }
   ]
