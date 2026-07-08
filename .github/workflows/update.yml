@@ -44,7 +44,10 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add docs/data.json
-          git diff --staged --quiet && { echo "Tidak ada perubahan data, lewati commit."; exit 0; }
+
+          # Selalu commit agar last_updated selalu mencerminkan waktu scraping terbaru,
+          # meskipun isi data tidak berubah (tidak ada ulasan baru dari pengguna)
+          git diff --staged --quiet && git commit --allow-empty -m "chore: update data review otomatis ($(date '+%Y-%m-%d %H:%M'))" || \
           git commit -m "chore: update data review otomatis ($(date '+%Y-%m-%d %H:%M'))"
 
           # Coba push, jika ditolak karena remote berubah duluan, pull --rebase lalu coba lagi
