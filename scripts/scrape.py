@@ -7,7 +7,7 @@ Output: docs/data.json (dibaca oleh dashboard di GitHub Pages)
 import json
 import re
 from collections import Counter
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 
 import pandas as pd
 from google_play_scraper import Sort, app, reviews
@@ -16,6 +16,7 @@ from google_play_scraper import Sort, app, reviews
 APP_ID = "com.disdukcapil.berau"  # Ganti jika app_id berbeda
 OUTPUT_PATH = "docs/data.json"
 MAX_REVIEWS = 1000
+WITA = timezone(timedelta(hours=8))  # UTC+8
 
 # ── KAMUS KATEGORI ───────────────────────────────────────────────────────────
 KATEGORI_KEYWORDS = {
@@ -78,7 +79,8 @@ def sanitize_for_json(obj):
 
 
 def main() -> None:
-    print(f"[{datetime.now()}] Mulai scraping aplikasi: {APP_ID}")
+    now_wita = datetime.now(WITA)
+    print(f"[{now_wita.strftime('%Y-%m-%d %H:%M WITA')}] Mulai scraping aplikasi: {APP_ID}")
 
     # ── Info aplikasi ─────────────────────────────────────────────────────
     info = app(APP_ID, lang="id", country="id")
@@ -163,7 +165,7 @@ def main() -> None:
 
     # ── Susun JSON output ─────────────────────────────────────────────────
     output = {
-        "last_updated": datetime.now().isoformat(),
+        "last_updated": now_wita.isoformat(),
         "app_info": {
             "title": info.get("title"),
             "developer": info.get("developer"),
@@ -192,7 +194,7 @@ def main() -> None:
     with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
         json.dump(output, f, ensure_ascii=False, indent=2, allow_nan=False)
 
-    print(f"[{datetime.now()}] Data berhasil disimpan ke {OUTPUT_PATH}")
+    print(f"[{now_wita.strftime('%Y-%m-%d %H:%M WITA')}] Data berhasil disimpan ke {OUTPUT_PATH}")
 
 
 if __name__ == "__main__":
