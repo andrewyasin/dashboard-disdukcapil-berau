@@ -17,289 +17,132 @@
     --sawah-green:#00923F;
     --kuningan:#E8B900;
     --line:#D9CFA0;
-    --shadow: 0 2px 0 rgba(11,61,36,0.07);
+    --shadow:0 2px 0 rgba(11,61,36,0.07);
   }
   *{box-sizing:border-box;}
   body{
     margin:0;
     background:var(--paper);
     background-image:
-      radial-gradient(circle at 100% 0%, rgba(201,168,106,0.10), transparent 40%),
-      repeating-linear-gradient(0deg, rgba(27,42,74,0.025) 0px, rgba(27,42,74,0.025) 1px, transparent 1px, transparent 28px);
+      radial-gradient(circle at 100% 0%,rgba(201,168,106,.10),transparent 40%),
+      repeating-linear-gradient(0deg,rgba(27,42,74,.025) 0,rgba(27,42,74,.025) 1px,transparent 1px,transparent 28px);
     color:var(--ink);
-    font-family:'IBM Plex Sans', sans-serif;
+    font-family:'IBM Plex Sans',sans-serif;
     -webkit-font-smoothing:antialiased;
   }
   a{color:inherit;}
   .wrap{max-width:1100px;margin:0 auto;padding:0 24px 80px;}
 
-  /* ── KOP SURAT / HEADER ─────────────────────────────────────────── */
-  .kop{
-    border-bottom:3px double var(--ink);
-    padding:36px 0 22px;
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-end;
-    gap:24px;
-    flex-wrap:wrap;
-  }
-  .kop-eyebrow{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:11px;
-    letter-spacing:0.14em;
-    text-transform:uppercase;
-    color:var(--ink-soft);
-    margin:0 0 10px;
-  }
-  .kop h1{
-    font-family:'Lora', serif;
-    font-weight:700;
-    font-size:clamp(28px, 4vw, 40px);
-    line-height:1.15;
-    margin:0;
-    letter-spacing:-0.01em;
-  }
-  .kop .sub{
-    font-size:14px;
-    color:var(--ink-soft);
-    margin-top:8px;
-    max-width:460px;
-  }
-  .meta-block{
-    text-align:right;
-    font-family:'IBM Plex Mono', monospace;
-    font-size:12px;
-    color:var(--ink-soft);
-    line-height:1.7;
-  }
+  /* KOP */
+  .kop{border-bottom:3px double var(--ink);padding:36px 0 22px;display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;}
+  .kop-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);margin:0 0 10px;}
+  .kop h1{font-family:'Lora',serif;font-weight:700;font-size:clamp(28px,4vw,40px);line-height:1.15;margin:0;letter-spacing:-.01em;}
+  .kop .sub{font-size:14px;color:var(--ink-soft);margin-top:8px;max-width:460px;}
+  .meta-block{text-align:right;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink-soft);line-height:1.7;}
   .meta-block strong{color:var(--ink);}
 
-  /* ── STEMPEL (signature element) ──────────────────────────────── */
-  .stempel-row{
-    display:flex;
-    align-items:center;
-    gap:28px;
-    padding:30px 0 8px;
-    flex-wrap:wrap;
-  }
-  .stempel{
-    width:128px;height:128px;
-    border-radius:50%;
-    border:3px solid var(--sawah-green);
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    color:var(--sawah-green);
-    transform:rotate(-7deg);
-    flex-shrink:0;
-    position:relative;
-    background:
-      radial-gradient(circle, rgba(0,146,63,0.07), transparent 70%);
-    opacity:0;
-    animation:stamp-in 0.5s 0.15s cubic-bezier(.2,1.4,.4,1) forwards;
-  }
-  .stempel::before{
-    content:'';
-    position:absolute;
-    inset:8px;
-    border:1px solid var(--sawah-green);
-    border-radius:50%;
-    opacity:0.55;
-  }
-  .stempel .nilai{
-    font-family:'IBM Plex Mono', monospace;
-    font-weight:700;
-    font-size:30px;
-    line-height:1;
-  }
-  .stempel .label{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:9px;
-    letter-spacing:0.08em;
-    text-transform:uppercase;
-    margin-top:4px;
-  }
-  @keyframes stamp-in{
-    from{opacity:0; transform:rotate(-22deg) scale(1.5);}
-    to{opacity:1; transform:rotate(-7deg) scale(1);}
-  }
-  .ringkasan-cepat{
-    display:flex;
-    gap:28px;
-    flex-wrap:wrap;
-    font-family:'IBM Plex Mono', monospace;
-  }
-  .ringkasan-cepat .item .n{
-    font-size:26px;
-    font-weight:700;
-    color:var(--ink);
-    display:block;
-  }
-  .ringkasan-cepat .item .t{
-    font-size:11px;
-    color:var(--ink-soft);
-    text-transform:uppercase;
-    letter-spacing:0.06em;
-  }
+  /* STEMPEL */
+  .stempel-row{display:flex;align-items:center;gap:28px;padding:30px 0 8px;flex-wrap:wrap;}
+  .stempel{width:128px;height:128px;border-radius:50%;border:3px solid var(--sawah-green);display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--sawah-green);transform:rotate(-7deg);flex-shrink:0;position:relative;background:radial-gradient(circle,rgba(0,146,63,.07),transparent 70%);opacity:0;animation:stamp-in .5s .15s cubic-bezier(.2,1.4,.4,1) forwards;}
+  .stempel::before{content:'';position:absolute;inset:8px;border:1px solid var(--sawah-green);border-radius:50%;opacity:.55;}
+  .stempel .nilai{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:30px;line-height:1;}
+  .stempel .label{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;margin-top:4px;}
+  @keyframes stamp-in{from{opacity:0;transform:rotate(-22deg) scale(1.5);}to{opacity:1;transform:rotate(-7deg) scale(1);}}
+  .ringkasan-cepat{display:flex;gap:28px;flex-wrap:wrap;font-family:'IBM Plex Mono',monospace;}
+  .ringkasan-cepat .item .n{font-size:26px;font-weight:700;color:var(--ink);display:block;}
+  .ringkasan-cepat .item .t{font-size:11px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.06em;}
 
-  /* ── PEMBAGI PASAL ────────────────────────────────────────────── */
-  .pasal{
-    margin-top:54px;
-  }
-  .pasal-head{
-    display:flex;
-    align-items:baseline;
-    gap:14px;
-    margin-bottom:18px;
-  }
-  .pasal-num{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:13px;
-    color:var(--kuningan);
-    background:var(--ink);
-    padding:3px 9px;
-    border-radius:2px;
-    letter-spacing:0.04em;
-  }
-  .pasal-head h2{
-    font-family:'Lora', serif;
-    font-weight:600;
-    font-style:italic;
-    font-size:21px;
-    margin:0;
-    color:var(--ink);
-  }
-  .pasal-line{
-    flex:1;
-    height:1px;
-    background:var(--line);
-    margin-left:4px;
-  }
+  /* RINGKASAN TEKS */
+  .ringkasan-teks{background:#fff;border:1px solid var(--line);border-left:4px solid var(--sawah-green);border-radius:3px;padding:16px 20px;margin-top:22px;font-size:14px;line-height:1.75;color:var(--ink-soft);}
+  .ringkasan-teks strong{color:var(--ink);}
 
-  /* ── GRID & KARTU ─────────────────────────────────────────────── */
-  .grid{display:grid; gap:18px;}
+  /* PASAL */
+  .pasal{margin-top:54px;}
+  .pasal-head{display:flex;align-items:baseline;gap:14px;margin-bottom:18px;}
+  .pasal-num{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--kuningan);background:var(--ink);padding:3px 9px;border-radius:2px;letter-spacing:.04em;}
+  .pasal-head h2{font-family:'Lora',serif;font-weight:600;font-style:italic;font-size:21px;margin:0;color:var(--ink);}
+  .pasal-line{flex:1;height:1px;background:var(--line);margin-left:4px;}
+
+  /* GRID & KARTU */
+  .grid{display:grid;gap:18px;}
   .grid-2{grid-template-columns:1fr 1fr;}
   .grid-3{grid-template-columns:1fr 1fr 1fr;}
-  @media (max-width:760px){
+  @media(max-width:760px){
     .grid-2,.grid-3{grid-template-columns:1fr;}
-    .kop{flex-direction:column; align-items:flex-start;}
+    .kop{flex-direction:column;align-items:flex-start;}
     .meta-block{text-align:left;}
+    .ringkasan-cepat{gap:16px;}
+    .ringkasan-cepat .item .n{font-size:22px;}
   }
-  .kartu{
-    background:#FFFDF8;
-    border:1px solid var(--line);
-    border-radius:3px;
-    padding:20px 22px;
-    box-shadow:var(--shadow);
-  }
-  .kartu h3{
-    font-family:'IBM Plex Sans', sans-serif;
-    font-weight:600;
-    font-size:13px;
-    text-transform:uppercase;
-    letter-spacing:0.05em;
-    color:var(--ink-soft);
-    margin:0 0 16px;
-  }
+  .kartu{background:#FFFDF8;border:1px solid var(--line);border-radius:3px;padding:20px 22px;box-shadow:var(--shadow);}
+  .kartu h3{font-family:'IBM Plex Sans',sans-serif;font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-soft);margin:0 0 16px;}
   .kartu canvas{max-height:280px;}
 
-  /* ── TABEL ────────────────────────────────────────────────────── */
-  table{
-    width:100%;
-    border-collapse:collapse;
-    font-size:13.5px;
+  /* FILTER BAR */
+  .filter-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;align-items:center;}
+  .filter-bar label{font-size:12px;font-family:'IBM Plex Mono',monospace;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.05em;}
+  .filter-bar select, .filter-bar input{
+    font-family:'IBM Plex Sans',sans-serif;font-size:13px;
+    border:1px solid var(--line);border-radius:3px;
+    background:var(--paper);color:var(--ink);
+    padding:6px 10px;cursor:pointer;
+    outline:none;
   }
-  thead th{
-    text-align:left;
-    font-family:'IBM Plex Mono', monospace;
-    font-size:10.5px;
-    text-transform:uppercase;
-    letter-spacing:0.05em;
-    color:var(--ink-soft);
-    border-bottom:1.5px solid var(--ink);
-    padding:8px 10px;
+  .filter-bar select:focus, .filter-bar input:focus{border-color:var(--sawah-green);}
+  .filter-bar .reset-btn{
+    font-size:12px;font-family:'IBM Plex Mono',monospace;
+    background:none;border:1px solid var(--line);border-radius:3px;
+    color:var(--ink-soft);padding:6px 12px;cursor:pointer;
+    transition:all .15s;
   }
-  tbody td{
-    padding:10px 10px;
-    border-bottom:1px solid var(--line);
-    vertical-align:top;
-  }
+  .filter-bar .reset-btn:hover{border-color:var(--sawah-green);color:var(--sawah-green);}
+  .jumlah-tampil{font-size:12px;font-family:'IBM Plex Mono',monospace;color:var(--ink-soft);margin-left:auto;}
+
+  /* TABEL */
+  .tabel-wrap{overflow-x:auto;}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;}
+  @media(max-width:600px){table{font-size:12px;}}
+  thead th{text-align:left;font-family:'IBM Plex Mono',monospace;font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-soft);border-bottom:1.5px solid var(--ink);padding:8px 10px;white-space:nowrap;}
+  tbody td{padding:10px;border-bottom:1px solid var(--line);vertical-align:top;}
   tbody tr:hover{background:var(--paper-deep);}
-  .bintang-pill{
-    font-family:'IBM Plex Mono', monospace;
-    font-weight:600;
-    font-size:12px;
-    padding:2px 7px;
-    border-radius:10px;
-    white-space:nowrap;
-  }
-  .bintang-pill.positif{background:rgba(61,122,92,0.13); color:var(--sawah-green);}
-  .bintang-pill.netral{background:rgba(201,168,106,0.22); color:#8a6d2f;}
-  .bintang-pill.negatif{background:rgba(193,68,45,0.12); color:var(--stamp-red);}
-  .isi-review{color:var(--ink-soft); max-width:380px;}
+  .bintang-pill{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:12px;padding:2px 7px;border-radius:10px;white-space:nowrap;}
+  .bintang-pill.positif{background:rgba(0,146,63,.13);color:var(--sawah-green);}
+  .bintang-pill.netral{background:rgba(232,185,0,.22);color:#7a6000;}
+  .bintang-pill.negatif{background:rgba(193,68,45,.12);color:var(--stamp-red);}
+  .isi-review{color:var(--ink-soft);max-width:360px;}
+  .likes-badge{font-size:11px;font-family:'IBM Plex Mono',monospace;color:var(--ink-soft);}
+  .likes-badge.tinggi{color:var(--sawah-green);font-weight:700;}
+  .tabel-kosong{text-align:center;padding:32px;color:var(--ink-soft);font-style:italic;}
+  .muat-lagi{display:block;width:100%;margin-top:14px;padding:10px;background:none;border:1px dashed var(--line);border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink-soft);cursor:pointer;transition:all .15s;}
+  .muat-lagi:hover{border-color:var(--sawah-green);color:var(--sawah-green);}
 
-  /* ── KATEGORI BAR LIST ────────────────────────────────────────── */
-  .kat-list{display:flex; flex-direction:column; gap:10px;}
-  .kat-row{display:flex; align-items:center; gap:10px;}
-  .kat-row .nama{
-    width:150px;
-    flex-shrink:0;
-    font-size:12.5px;
-    color:var(--ink);
-  }
-  .kat-row .bar-bg{
-    flex:1;
-    height:10px;
-    background:var(--paper-deep);
-    border-radius:5px;
-    overflow:hidden;
-  }
-  .kat-row .bar-fg{
-    height:100%;
-    background:var(--ink-soft);
-    border-radius:5px;
-  }
-  .kat-row .jumlah{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:12px;
-    width:34px;
-    text-align:right;
-    color:var(--ink-soft);
-  }
+  /* HIGHLIGHT ULASAN */
+  .highlight-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  @media(max-width:600px){.highlight-grid{grid-template-columns:1fr;}}
+  .highlight-kartu{background:#FFFDF8;border:1px solid var(--line);border-radius:3px;padding:16px 18px;}
+  .highlight-kartu .label-hl{font-size:10px;font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+  .dot{width:8px;height:8px;border-radius:50%;display:inline-block;}
+  .dot.pos{background:var(--sawah-green);}
+  .dot.neg{background:var(--stamp-red);}
+  .highlight-kartu .isi{font-size:13.5px;color:var(--ink);line-height:1.6;margin-bottom:10px;}
+  .highlight-kartu .meta{font-size:11px;font-family:'IBM Plex Mono',monospace;color:var(--ink-soft);}
 
-  /* ── FOOTER ───────────────────────────────────────────────────── */
-  footer{
-    margin-top:60px;
-    padding-top:22px;
-    border-top:1px solid var(--line);
-    font-size:12px;
-    color:var(--ink-soft);
-    display:flex;
-    justify-content:space-between;
-    flex-wrap:wrap;
-    gap:8px;
-  }
-  footer code{
-    font-family:'IBM Plex Mono', monospace;
-    background:var(--paper-deep);
-    padding:2px 6px;
-    border-radius:3px;
-  }
+  /* KATEGORI */
+  .kat-list{display:flex;flex-direction:column;gap:10px;}
+  .kat-row{display:flex;align-items:center;gap:10px;}
+  .kat-row .nama{width:150px;flex-shrink:0;font-size:12.5px;color:var(--ink);}
+  .kat-row .bar-bg{flex:1;height:10px;background:var(--paper-deep);border-radius:5px;overflow:hidden;}
+  .kat-row .bar-fg{height:100%;background:var(--ink-soft);border-radius:5px;}
+  .kat-row .jumlah{font-family:'IBM Plex Mono',monospace;font-size:12px;width:34px;text-align:right;color:var(--ink-soft);}
 
-  /* ── STATUS LOADING / ERROR ──────────────────────────────────── */
-  #status{
-    padding:60px 0;
-    text-align:center;
-    color:var(--ink-soft);
-    font-family:'IBM Plex Mono', monospace;
-    font-size:13px;
-  }
+  /* FOOTER */
+  footer{margin-top:60px;padding-top:22px;border-top:1px solid var(--line);font-size:12px;color:var(--ink-soft);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+  footer code{font-family:'IBM Plex Mono',monospace;background:var(--paper-deep);padding:2px 6px;border-radius:3px;}
+
+  /* STATUS */
+  #status{padding:60px 0;text-align:center;color:var(--ink-soft);font-family:'IBM Plex Mono',monospace;font-size:13px;}
   .hidden{display:none !important;}
-
-  @media (prefers-reduced-motion: reduce){
-    .stempel{animation:none; opacity:1;}
-  }
+  @media(prefers-reduced-motion:reduce){.stempel{animation:none;opacity:1;}}
 </style>
 </head>
 <body>
@@ -322,90 +165,89 @@
 
   <div id="konten" class="hidden">
 
+    <!-- RINGKASAN -->
     <div class="stempel-row">
       <div class="stempel">
         <span class="nilai" id="stempel-rating">–</span>
         <span class="label">dari 5.0</span>
       </div>
-      <div class="ringkasan-cepat">
-        <div class="item"><span class="n" id="ring-total">–</span><span class="t">Total Ulasan</span></div>
-        <div class="item"><span class="n" id="ring-positif">–</span><span class="t">Sentimen Positif</span></div>
-        <div class="item"><span class="n" id="ring-negatif">–</span><span class="t">Sentimen Negatif</span></div>
-        <div class="item"><span class="n" id="ring-respons">–</span><span class="t">Direspons Developer</span></div>
+      <div>
+        <div class="ringkasan-cepat">
+          <div class="item"><span class="n" id="ring-total">–</span><span class="t">Total Ulasan</span></div>
+          <div class="item"><span class="n" id="ring-positif">–</span><span class="t">Sentimen Positif</span></div>
+          <div class="item"><span class="n" id="ring-negatif">–</span><span class="t">Sentimen Negatif</span></div>
+          <div class="item"><span class="n" id="ring-respons">–</span><span class="t">Direspons Developer</span></div>
+        </div>
+        <div class="ringkasan-teks" id="ringkasan-teks"></div>
       </div>
     </div>
 
-    <!-- PASAL 1 -->
+    <!-- 01: DISTRIBUSI -->
     <div class="pasal">
-      <div class="pasal-head">
-        <span class="pasal-num">01</span>
-        <h2>Distribusi Penilaian</h2>
-        <span class="pasal-line"></span>
-      </div>
+      <div class="pasal-head"><span class="pasal-num">01</span><h2>Distribusi Penilaian</h2><span class="pasal-line"></span></div>
       <div class="grid grid-2">
-        <div class="kartu">
-          <h3>Distribusi Rating Bintang</h3>
-          <canvas id="chart-bintang"></canvas>
-        </div>
-        <div class="kartu">
-          <h3>Proporsi Sentimen</h3>
-          <canvas id="chart-sentimen"></canvas>
-        </div>
+        <div class="kartu"><h3>Distribusi Rating Bintang</h3><canvas id="chart-bintang"></canvas></div>
+        <div class="kartu"><h3>Proporsi Sentimen</h3><canvas id="chart-sentimen"></canvas></div>
       </div>
     </div>
 
-    <!-- PASAL 2 -->
+    <!-- 02: TREN -->
     <div class="pasal">
-      <div class="pasal-head">
-        <span class="pasal-num">02</span>
-        <h2>Tren dari Waktu ke Waktu</h2>
-        <span class="pasal-line"></span>
-      </div>
+      <div class="pasal-head"><span class="pasal-num">02</span><h2>Tren dari Waktu ke Waktu</h2><span class="pasal-line"></span></div>
       <div class="grid grid-2">
-        <div class="kartu">
-          <h3>Tren Ulasan per Tahun</h3>
-          <canvas id="chart-tren"></canvas>
-        </div>
-        <div class="kartu">
-          <h3>Rata-rata Bintang per Tahun</h3>
-          <canvas id="chart-avg-tahun"></canvas>
-        </div>
+        <div class="kartu"><h3>Tren Ulasan per Tahun</h3><canvas id="chart-tren"></canvas></div>
+        <div class="kartu"><h3>Rata-rata Bintang per Tahun</h3><canvas id="chart-avg-tahun"></canvas></div>
       </div>
     </div>
 
-    <!-- PASAL 3 -->
+    <!-- 03: TOPIK -->
     <div class="pasal">
-      <div class="pasal-head">
-        <span class="pasal-num">03</span>
-        <h2>Topik &amp; Responsivitas</h2>
-        <span class="pasal-line"></span>
-      </div>
+      <div class="pasal-head"><span class="pasal-num">03</span><h2>Topik &amp; Responsivitas</h2><span class="pasal-line"></span></div>
       <div class="grid grid-2">
-        <div class="kartu">
-          <h3>Frekuensi Topik Ulasan</h3>
-          <div class="kat-list" id="kat-list"></div>
-        </div>
-        <div class="kartu">
-          <h3>Responsivitas Developer</h3>
-          <canvas id="chart-respons"></canvas>
-        </div>
+        <div class="kartu"><h3>Frekuensi Topik Ulasan</h3><div class="kat-list" id="kat-list"></div></div>
+        <div class="kartu"><h3>Responsivitas Developer</h3><canvas id="chart-respons"></canvas></div>
       </div>
     </div>
 
-    <!-- PASAL 4 -->
+    <!-- 04: HIGHLIGHT -->
     <div class="pasal">
-      <div class="pasal-head">
-        <span class="pasal-num">04</span>
-        <h2>Ulasan Terbaru</h2>
-        <span class="pasal-line"></span>
-      </div>
+      <div class="pasal-head"><span class="pasal-num">04</span><h2>Suara Paling Didengar</h2><span class="pasal-line"></span></div>
+      <div class="highlight-grid" id="highlight-grid"></div>
+    </div>
+
+    <!-- 05: ULASAN -->
+    <div class="pasal">
+      <div class="pasal-head"><span class="pasal-num">05</span><h2>Jelajahi Semua Ulasan</h2><span class="pasal-line"></span></div>
       <div class="kartu">
-        <table>
-          <thead>
-            <tr><th>Pengguna</th><th>Isi Ulasan</th><th>Bintang</th><th>Tanggal</th><th>Versi</th></tr>
-          </thead>
-          <tbody id="tabel-review"></tbody>
-        </table>
+        <div class="filter-bar">
+          <label>Filter:</label>
+          <select id="filter-sentimen">
+            <option value="">Semua Sentimen</option>
+            <option value="positif">✅ Positif (4-5★)</option>
+            <option value="netral">➖ Netral (3★)</option>
+            <option value="negatif">❌ Negatif (1-2★)</option>
+          </select>
+          <select id="filter-bintang">
+            <option value="">Semua Bintang</option>
+            <option value="5">★★★★★ 5</option>
+            <option value="4">★★★★☆ 4</option>
+            <option value="3">★★★☆☆ 3</option>
+            <option value="2">★★☆☆☆ 2</option>
+            <option value="1">★☆☆☆☆ 1</option>
+          </select>
+          <input type="text" id="filter-cari" placeholder="🔍 Cari kata…" style="min-width:140px;">
+          <button class="reset-btn" onclick="resetFilter()">Reset</button>
+          <span class="jumlah-tampil" id="jumlah-tampil"></span>
+        </div>
+        <div class="tabel-wrap">
+          <table>
+            <thead>
+              <tr><th>Pengguna</th><th>Isi Ulasan</th><th>Bintang</th><th>Suka</th><th>Tanggal</th><th>Versi</th></tr>
+            </thead>
+            <tbody id="tabel-review"></tbody>
+          </table>
+        </div>
+        <button class="muat-lagi hidden" id="btn-muat-lagi" onclick="muatLagi()">Tampilkan lebih banyak ▾</button>
       </div>
     </div>
 
@@ -415,7 +257,6 @@
     <span>Dasbor Ulasan Aplikasi Disdukcapil Kabupaten Berau</span>
     <span>Data diperbarui otomatis harian via <code>GitHub Actions</code></span>
   </footer>
-
 </div>
 
 <script>
@@ -423,28 +264,29 @@ const PALET = {
   ink:'#0B3D24', inkSoft:'#3F6B52', stamp:'#C1442D', sawah:'#00923F', kuningan:'#E8B900',
   bintang:['#C1442D','#D9824F','#E8B900','#5FA86E','#00923F']
 };
-
-Chart.defaults.font.family = "'IBM Plex Sans', sans-serif";
+Chart.defaults.font.family = "'IBM Plex Sans',sans-serif";
 Chart.defaults.color = '#3F6B52';
 Chart.defaults.borderColor = '#D8CBA8';
 
+let semuaReview = [];
+let tampilSampai = 20;
+
 async function muatData(){
   try{
-    const res = await fetch('data.json', {cache:'no-store'});
+    const res = await fetch('data.json',{cache:'no-store'});
     if(!res.ok) throw new Error('Gagal memuat data.json');
     const data = await res.json();
     render(data);
   }catch(err){
     document.getElementById('status').innerHTML =
-      'Data belum tersedia. Jalankan workflow GitHub Actions untuk membuat <code>data.json</code> pertama kali.<br><br>' +
-      '<span style="color:#C1442D">' + err.message + '</span>';
+      'Data belum tersedia. Jalankan workflow GitHub Actions untuk membuat <code>data.json</code> pertama kali.<br><br>'+
+      '<span style="color:#C1442D">'+err.message+'</span>';
   }
 }
 
 function formatTanggal(iso){
   if(!iso) return '–';
-  const d = new Date(iso);
-  return d.toLocaleDateString('id-ID', {day:'2-digit', month:'short', year:'numeric'});
+  return new Date(iso).toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'});
 }
 
 function render(data){
@@ -453,145 +295,193 @@ function render(data){
 
   document.getElementById('meta-update').textContent = formatTanggal(data.last_updated);
   document.getElementById('meta-periode').textContent =
-    (data.periode.mulai ? formatTanggal(data.periode.mulai) : '–') + ' s.d. ' +
+    (data.periode.mulai ? formatTanggal(data.periode.mulai) : '–')+' s.d. '+
     (data.periode.selesai ? formatTanggal(data.periode.selesai) : '–');
 
   document.getElementById('stempel-rating').textContent = data.rata_rata_bintang.toFixed(2);
 
   const total = data.total_review;
-  const pos = data.distribusi_sentimen.Positif || 0;
-  const neg = data.distribusi_sentimen.Negatif || 0;
-  const respondedPct = total ? Math.round((data.responsivitas_developer.Ya/total)*100) : 0;
+  const pos = data.distribusi_sentimen.Positif||0;
+  const neg = data.distribusi_sentimen.Negatif||0;
+  const netral = data.distribusi_sentimen.Netral||0;
+  const respPct = total ? Math.round((data.responsivitas_developer.Ya/total)*100) : 0;
 
   document.getElementById('ring-total').textContent = total.toLocaleString('id-ID');
   document.getElementById('ring-positif').textContent = total ? Math.round(pos/total*100)+'%' : '0%';
   document.getElementById('ring-negatif').textContent = total ? Math.round(neg/total*100)+'%' : '0%';
-  document.getElementById('ring-respons').textContent = respondedPct+'%';
+  document.getElementById('ring-respons').textContent = respPct+'%';
 
-  // ── Chart 1: Distribusi Bintang ──
-  new Chart(document.getElementById('chart-bintang'), {
+  // ── Ringkasan teks otomatis ──
+  const rating = data.rata_rata_bintang;
+  const kondisi = rating >= 4 ? 'baik' : rating >= 3 ? 'cukup baik' : 'perlu perhatian serius';
+  const topKeluhan = Object.entries(data.frekuensi_kategori)
+    .filter(([k])=>k!=='Pujian Umum'&&k!=='Lainnya')
+    .slice(0,2).map(([k])=>'<strong>'+k+'</strong>').join(' dan ');
+  document.getElementById('ringkasan-teks').innerHTML =
+    `Secara keseluruhan, masyarakat menilai aplikasi ini <strong>${kondisi}</strong> dengan rata-rata bintang <strong>${rating.toFixed(2)}</strong>. `+
+    `Dari <strong>${total.toLocaleString('id-ID')}</strong> ulasan, sebanyak <strong>${Math.round(pos/total*100)}%</strong> bersifat positif. `+
+    (topKeluhan ? `Topik yang paling sering dikeluhkan adalah ${topKeluhan}. ` : '')+
+    `Developer merespons <strong>${respPct}%</strong> ulasan — `+
+    (respPct < 20 ? 'tingkat respons ini <strong>perlu ditingkatkan</strong>.' : respPct < 50 ? 'ada ruang untuk peningkatan respons.' : 'tingkat respons yang baik.');
+
+  // ── Chart 1: Bintang ──
+  new Chart(document.getElementById('chart-bintang'),{
     type:'bar',
-    data:{
-      labels:['1★','2★','3★','4★','5★'],
-      datasets:[{
-        data:[1,2,3,4,5].map(i => data.distribusi_bintang[i] || 0),
-        backgroundColor: PALET.bintang,
-        borderRadius:3,
-        maxBarThickness:46
-      }]
-    },
-    options:{
-      plugins:{legend:{display:false}},
-      scales:{
-        y:{beginAtZero:true, grid:{color:'#EFE6D2'}},
-        x:{grid:{display:false}}
-      }
-    }
+    data:{labels:['1★','2★','3★','4★','5★'],datasets:[{
+      data:[1,2,3,4,5].map(i=>data.distribusi_bintang[i]||0),
+      backgroundColor:PALET.bintang,borderRadius:3,maxBarThickness:46
+    }]},
+    options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:'#EFE6D2'}},x:{grid:{display:false}}}}
   });
 
-  // ── Chart 2: Sentimen Pie ──
+  // ── Chart 2: Sentimen ──
   const sent = data.distribusi_sentimen;
-  new Chart(document.getElementById('chart-sentimen'), {
+  new Chart(document.getElementById('chart-sentimen'),{
     type:'doughnut',
-    data:{
-      labels:Object.keys(sent),
-      datasets:[{
-        data:Object.values(sent),
-        backgroundColor:Object.keys(sent).map(k =>
-          k==='Positif' ? PALET.sawah : k==='Negatif' ? PALET.stamp : PALET.kuningan),
-        borderColor:'#FFFDF8',
-        borderWidth:3
-      }]
-    },
-    options:{
-      cutout:'62%',
-      plugins:{legend:{position:'bottom', labels:{boxWidth:12, font:{size:11}}}}
-    }
+    data:{labels:Object.keys(sent),datasets:[{
+      data:Object.values(sent),
+      backgroundColor:Object.keys(sent).map(k=>k==='Positif'?PALET.sawah:k==='Negatif'?PALET.stamp:PALET.kuningan),
+      borderColor:'#FFFDF8',borderWidth:3
+    }]},
+    options:{cutout:'62%',plugins:{legend:{position:'bottom',labels:{boxWidth:12,font:{size:11}}}}}
   });
 
-  // ── Chart 3: Tren per Tahun ──
+  // ── Chart 3: Tren ──
   const tren = data.tren_per_tahun;
-  new Chart(document.getElementById('chart-tren'), {
+  new Chart(document.getElementById('chart-tren'),{
     type:'line',
-    data:{
-      labels:tren.map(t => t.tahun),
-      datasets:[
-        {label:'Positif', data:tren.map(t=>t.Positif), borderColor:PALET.sawah, backgroundColor:PALET.sawah, tension:0.3},
-        {label:'Netral', data:tren.map(t=>t.Netral), borderColor:PALET.kuningan, backgroundColor:PALET.kuningan, tension:0.3},
-        {label:'Negatif', data:tren.map(t=>t.Negatif), borderColor:PALET.stamp, backgroundColor:PALET.stamp, tension:0.3}
-      ]
-    },
-    options:{
-      plugins:{legend:{position:'bottom', labels:{boxWidth:12, font:{size:11}}}},
-      scales:{ y:{beginAtZero:true, grid:{color:'#EFE6D2'}}, x:{grid:{display:false}} }
-    }
+    data:{labels:tren.map(t=>t.tahun),datasets:[
+      {label:'Positif',data:tren.map(t=>t.Positif),borderColor:PALET.sawah,backgroundColor:PALET.sawah,tension:.3},
+      {label:'Netral',data:tren.map(t=>t.Netral),borderColor:PALET.kuningan,backgroundColor:PALET.kuningan,tension:.3},
+      {label:'Negatif',data:tren.map(t=>t.Negatif),borderColor:PALET.stamp,backgroundColor:PALET.stamp,tension:.3}
+    ]},
+    options:{plugins:{legend:{position:'bottom',labels:{boxWidth:12,font:{size:11}}}},
+      scales:{y:{beginAtZero:true,grid:{color:'#EFE6D2'}},x:{grid:{display:false}}}}
   });
 
-  // ── Chart 4: Rata-rata Bintang per Tahun ──
+  // ── Chart 4: Avg/tahun ──
   const avgTahun = data.avg_bintang_per_tahun;
   const tahunKeys = Object.keys(avgTahun).sort();
-  new Chart(document.getElementById('chart-avg-tahun'), {
+  new Chart(document.getElementById('chart-avg-tahun'),{
     type:'bar',
-    data:{
-      labels:tahunKeys,
-      datasets:[{
-        data:tahunKeys.map(t => avgTahun[t]),
-        backgroundColor: PALET.inkSoft,
-        borderRadius:3,
-        maxBarThickness:40
-      }]
-    },
-    options:{
-      plugins:{legend:{display:false}},
-      scales:{ y:{beginAtZero:true, max:5, grid:{color:'#EFE6D2'}}, x:{grid:{display:false}} }
-    }
+    data:{labels:tahunKeys,datasets:[{
+      data:tahunKeys.map(t=>avgTahun[t]),
+      backgroundColor:PALET.inkSoft,borderRadius:3,maxBarThickness:40
+    }]},
+    options:{plugins:{legend:{display:false}},
+      scales:{y:{beginAtZero:true,max:5,grid:{color:'#EFE6D2'}},x:{grid:{display:false}}}}
   });
 
-  // ── Kategori list (bar horizontal manual, biar match desain) ──
+  // ── Kategori ──
   const katList = document.getElementById('kat-list');
-  const kategori = Object.entries(data.frekuensi_kategori).slice(0, 9);
-  const maxKat = Math.max(...kategori.map(([,v]) => v));
-  katList.innerHTML = kategori.map(([nama, jumlah]) => `
+  const kategori = Object.entries(data.frekuensi_kategori).slice(0,9);
+  const maxKat = Math.max(...kategori.map(([,v])=>v));
+  katList.innerHTML = kategori.map(([nama,jumlah])=>`
     <div class="kat-row">
       <span class="nama">${nama}</span>
       <span class="bar-bg"><span class="bar-fg" style="width:${(jumlah/maxKat*100).toFixed(0)}%"></span></span>
       <span class="jumlah">${jumlah}</span>
-    </div>
-  `).join('');
+    </div>`).join('');
 
-  // ── Chart 5: Responsivitas Developer ──
+  // ── Chart 5: Responsivitas ──
   const resp = data.responsivitas_developer;
-  new Chart(document.getElementById('chart-respons'), {
+  new Chart(document.getElementById('chart-respons'),{
     type:'bar',
-    data:{
-      labels:['Tidak Dibalas','Dibalas'],
-      datasets:[{
-        data:[resp.Tidak, resp.Ya],
-        backgroundColor:['#C9BBA0', PALET.inkSoft],
-        borderRadius:3,
-        maxBarThickness:60
-      }]
-    },
-    options:{
-      indexAxis:'y',
-      plugins:{legend:{display:false}},
-      scales:{ x:{beginAtZero:true, grid:{color:'#EFE6D2'}}, y:{grid:{display:false}} }
-    }
+    data:{labels:['Tidak Dibalas','Dibalas'],datasets:[{
+      data:[resp.Tidak,resp.Ya],
+      backgroundColor:['#C9BBA0',PALET.inkSoft],borderRadius:3,maxBarThickness:60
+    }]},
+    options:{indexAxis:'y',plugins:{legend:{display:false}},
+      scales:{x:{beginAtZero:true,grid:{color:'#EFE6D2'}},y:{grid:{display:false}}}}
   });
 
-  // ── Tabel review terbaru ──
+  // ── Highlight: ulasan paling disukai positif & negatif ──
+  const revs = data.sample_reviews;
+  const topPos = [...revs].filter(r=>r.bintang>=4).sort((a,b)=>(b.likes||0)-(a.likes||0))[0];
+  const topNeg = [...revs].filter(r=>r.bintang<=2).sort((a,b)=>(b.likes||0)-(a.likes||0))[0];
+  const hlGrid = document.getElementById('highlight-grid');
+  const hlKartu = (r, jenis) => r ? `
+    <div class="highlight-kartu">
+      <div class="label-hl"><span class="dot ${jenis}"></span>
+        ${jenis==='pos'?'Apresiasi Terpopuler':'Keluhan Terpopuler'} · ${r.likes||0} suka
+      </div>
+      <div class="isi">"${r.isi||''}"</div>
+      <div class="meta">${r.nama||'–'} · ${'★'.repeat(r.bintang)}${'☆'.repeat(5-r.bintang)} · ${formatTanggal(r.tanggal)}</div>
+    </div>` : '';
+  hlGrid.innerHTML = hlKartu(topPos,'pos') + hlKartu(topNeg,'neg');
+
+  // ── Tabel dengan filter & muat lebih ──
+  semuaReview = revs;
+  tampilSampai = 20;
+  renderTabel();
+
+  // event listener filter
+  ['filter-sentimen','filter-bintang','filter-cari'].forEach(id=>{
+    document.getElementById(id).addEventListener('input', ()=>{ tampilSampai=20; renderTabel(); });
+  });
+}
+
+function getFiltered(){
+  const sent = document.getElementById('filter-sentimen').value;
+  const bintang = document.getElementById('filter-bintang').value;
+  const cari = document.getElementById('filter-cari').value.toLowerCase().trim();
+  return semuaReview.filter(r=>{
+    const kelas = r.bintang>=4?'positif':r.bintang===3?'netral':'negatif';
+    if(sent && kelas!==sent) return false;
+    if(bintang && r.bintang!=bintang) return false;
+    if(cari && !(r.isi||'').toLowerCase().includes(cari)) return false;
+    return true;
+  });
+}
+
+function renderTabel(){
+  const filtered = getFiltered();
+  const tampil = filtered.slice(0, tampilSampai);
   const tbody = document.getElementById('tabel-review');
-  tbody.innerHTML = data.sample_reviews.map(r => {
-    const kelas = r.bintang >= 4 ? 'positif' : r.bintang === 3 ? 'netral' : 'negatif';
-    return `
-      <tr>
-        <td>${r.nama || '–'}</td>
-        <td class="isi-review">${(r.isi || '').slice(0,140)}${(r.isi||'').length>140?'…':''}</td>
-        <td><span class="bintang-pill ${kelas}">${'★'.repeat(r.bintang)}${'☆'.repeat(5-r.bintang)}</span></td>
-        <td>${formatTanggal(r.tanggal)}</td>
-        <td>${r.versi || '–'}</td>
-      </tr>`;
+  const btnLagi = document.getElementById('btn-muat-lagi');
+
+  document.getElementById('jumlah-tampil').textContent =
+    filtered.length === semuaReview.length
+      ? `${filtered.length} ulasan`
+      : `${filtered.length} dari ${semuaReview.length} ulasan`;
+
+  if(tampil.length===0){
+    tbody.innerHTML = `<tr><td colspan="6" class="tabel-kosong">Tidak ada ulasan yang sesuai filter.</td></tr>`;
+    btnLagi.classList.add('hidden');
+    return;
+  }
+
+  tbody.innerHTML = tampil.map(r=>{
+    const kelas = r.bintang>=4?'positif':r.bintang===3?'netral':'negatif';
+    const cari = document.getElementById('filter-cari').value.toLowerCase().trim();
+    let isi = (r.isi||'').slice(0,160)+(r.isi||'').length>160?'…':'';
+    if(cari) isi = isi.replace(new RegExp(cari,'gi'), m=>`<mark style="background:#FFF176;border-radius:2px">${m}</mark>`);
+    const likesKelas = (r.likes||0)>=5?'tinggi':'';
+    return `<tr>
+      <td style="white-space:nowrap;font-size:12.5px">${r.nama||'–'}</td>
+      <td class="isi-review">${isi}</td>
+      <td><span class="bintang-pill ${kelas}">${'★'.repeat(r.bintang)}${'☆'.repeat(5-r.bintang)}</span></td>
+      <td><span class="likes-badge ${likesKelas}">👍 ${r.likes||0}</span></td>
+      <td style="white-space:nowrap;font-size:12px">${formatTanggal(r.tanggal)}</td>
+      <td style="font-size:12px">${r.versi||'–'}</td>
+    </tr>`;
   }).join('');
+
+  btnLagi.classList.toggle('hidden', tampilSampai >= filtered.length);
+  btnLagi.textContent = `Tampilkan lebih banyak (${filtered.length - tampilSampai} lagi) ▾`;
+}
+
+function muatLagi(){
+  tampilSampai += 20;
+  renderTabel();
+}
+
+function resetFilter(){
+  document.getElementById('filter-sentimen').value='';
+  document.getElementById('filter-bintang').value='';
+  document.getElementById('filter-cari').value='';
+  tampilSampai=20;
+  renderTabel();
 }
 
 muatData();
