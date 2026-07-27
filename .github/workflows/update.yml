@@ -3,7 +3,8 @@ name: Update Dashboard Data
 on:
   schedule:
     # Setiap hari pukul 01:00 WITA (17:00 UTC hari sebelumnya)
-    - cron: "0 17 * * *"
+    # - cron: "0 17 * * *"
+    - cron: '*/30 * * * *' 
   workflow_dispatch: {}   # bisa dijalankan manual dari tab Actions
   push:
     branches: [main]
