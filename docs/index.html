@@ -52,9 +52,7 @@
   .ringkasan-cepat .item .n{font-size:26px;font-weight:700;color:var(--ink);display:block;}
   .ringkasan-cepat .item .t{font-size:11px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.06em;}
 
-  /* RINGKASAN TEKS */
-  .ringkasan-teks{background:#fff;border:1px solid var(--line);border-left:4px solid var(--sawah-green);border-radius:3px;padding:16px 20px;margin-top:22px;font-size:14px;line-height:1.75;color:var(--ink-soft);}
-  .ringkasan-teks strong{color:var(--ink);}
+
 
   /* PASAL */
   .pasal{margin-top:54px;}
@@ -178,7 +176,7 @@
           <div class="item"><span class="n" id="ring-negatif">–</span><span class="t">Sentimen Negatif</span></div>
           <div class="item"><span class="n" id="ring-respons">–</span><span class="t">Direspons Developer</span></div>
         </div>
-        <div class="ringkasan-teks" id="ringkasan-teks"></div>
+
       </div>
     </div>
 
@@ -211,7 +209,7 @@
 
     <!-- 04: HIGHLIGHT -->
     <div class="pasal">
-      <div class="pasal-head"><span class="pasal-num">04</span><h2>Suara Paling Didengar</h2><span class="pasal-line"></span></div>
+      <div class="pasal-head"><span class="pasal-num">04</span><h2>Sorotan Ulasan</h2><span class="pasal-line"></span></div>
       <div class="highlight-grid" id="highlight-grid"></div>
     </div>
 
@@ -311,27 +309,34 @@ function render(data){
   document.getElementById('ring-negatif').textContent = total ? Math.round(neg/total*100)+'%' : '0%';
   document.getElementById('ring-respons').textContent = respPct+'%';
 
-  // ── Ringkasan teks otomatis ──
-  const rating = data.rata_rata_bintang;
-  const kondisi = rating >= 4 ? 'baik' : rating >= 3 ? 'cukup baik' : 'perlu perhatian serius';
-  const topKeluhan = Object.entries(data.frekuensi_kategori)
-    .filter(([k])=>k!=='Pujian Umum'&&k!=='Lainnya')
-    .slice(0,2).map(([k])=>'<strong>'+k+'</strong>').join(' dan ');
-  document.getElementById('ringkasan-teks').innerHTML =
-    `Secara keseluruhan, masyarakat menilai aplikasi ini <strong>${kondisi}</strong> dengan rata-rata bintang <strong>${rating.toFixed(2)}</strong>. `+
-    `Dari <strong>${total.toLocaleString('id-ID')}</strong> ulasan, sebanyak <strong>${Math.round(pos/total*100)}%</strong> bersifat positif. `+
-    (topKeluhan ? `Topik yang paling sering dikeluhkan adalah ${topKeluhan}. ` : '')+
-    `Developer merespons <strong>${respPct}%</strong> ulasan — `+
-    (respPct < 20 ? 'tingkat respons ini <strong>perlu ditingkatkan</strong>.' : respPct < 50 ? 'ada ruang untuk peningkatan respons.' : 'tingkat respons yang baik.');
-
   // ── Chart 1: Bintang ──
+  const valLabelPlugin = {
+    id:'valLabel',
+    afterDatasetsDraw(chart){
+      const ctx=chart.ctx;
+      chart.data.datasets.forEach((ds,i)=>{
+        chart.getDatasetMeta(i).data.forEach((bar,idx)=>{
+          const v=ds.data[idx];
+          if(!v) return;
+          ctx.save();
+          ctx.fillStyle='#0B3D24';
+          ctx.font='bold 11px IBM Plex Mono';
+          ctx.textAlign='center';
+          ctx.textBaseline='bottom';
+          ctx.fillText(v, bar.x, bar.y-3);
+          ctx.restore();
+        });
+      });
+    }
+  };
   new Chart(document.getElementById('chart-bintang'),{
     type:'bar',
     data:{labels:['1★','2★','3★','4★','5★'],datasets:[{
       data:[1,2,3,4,5].map(i=>data.distribusi_bintang[i]||0),
       backgroundColor:PALET.bintang,borderRadius:3,maxBarThickness:46
     }]},
-    options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:'#EFE6D2'}},x:{grid:{display:false}}}}
+    options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:'#EFE6D2'}},x:{grid:{display:false}}}},
+    plugins:[valLabelPlugin]
   });
 
   // ── Chart 2: Sentimen ──
@@ -343,8 +348,44 @@ function render(data){
       backgroundColor:Object.keys(sent).map(k=>k==='Positif'?PALET.sawah:k==='Negatif'?PALET.stamp:PALET.kuningan),
       borderColor:'#FFFDF8',borderWidth:3
     }]},
-    options:{cutout:'62%',plugins:{legend:{position:'bottom',labels:{boxWidth:12,font:{size:11}}}}}
+    options:{cutout:'62%',plugins:{legend:{position:'bottom',labels:{boxWidth:12,font:{size:11}}},
+      tooltip:{callbacks:{label:function(ctx){
+        const total=ctx.dataset.data.reduce((a,b)=>a+b,0);
+        const pct=(ctx.parsed/total*100).toFixed(1);
+        return ` ${ctx.label}: ${ctx.parsed} (${pct}%)`;
+      }}}},
+      animation:{animateRotate:true},
+      elements:{arc:{borderWidth:3}}
+    }
+  ,plugins:[doughnutLabelPlugin]
   });
+
+  // ── Plugin label % di tengah doughnut ──
+  const doughnutLabelPlugin = {
+    id:'doughnutLabel',
+    afterDraw(chart){
+      if(chart.config.type!=='doughnut') return;
+      const ctx=chart.ctx;
+      const total=chart.data.datasets[0].data.reduce((a,b)=>a+b,0);
+      chart.data.datasets[0].data.forEach((val,i)=>{
+        const meta=chart.getDatasetMeta(0);
+        if(meta.data[i].hidden) return;
+        const arc=meta.data[i];
+        const midAngle=(arc.startAngle+arc.endAngle)/2;
+        const r=(arc.outerRadius+arc.innerRadius)/2;
+        const x=arc.x+r*Math.cos(midAngle);
+        const y=arc.y+r*Math.sin(midAngle);
+        const pct=(val/total*100).toFixed(1)+'%';
+        ctx.save();
+        ctx.fillStyle='#fff';
+        ctx.font='bold 12px IBM Plex Mono';
+        ctx.textAlign='center';
+        ctx.textBaseline='middle';
+        ctx.fillText(pct,x,y);
+        ctx.restore();
+      });
+    }
+  };
 
   // ── Chart 3: Tren ──
   const tren = data.tren_per_tahun;
@@ -369,7 +410,8 @@ function render(data){
       backgroundColor:PALET.inkSoft,borderRadius:3,maxBarThickness:40
     }]},
     options:{plugins:{legend:{display:false}},
-      scales:{y:{beginAtZero:true,max:5,grid:{color:'#EFE6D2'}},x:{grid:{display:false}}}}
+      scales:{y:{beginAtZero:true,max:5,grid:{color:'#EFE6D2'}},x:{grid:{display:false}}}},
+    plugins:[valLabelPlugin]
   });
 
   // ── Kategori ──
@@ -385,6 +427,26 @@ function render(data){
 
   // ── Chart 5: Responsivitas ──
   const resp = data.responsivitas_developer;
+  const totalResp = resp.Tidak + resp.Ya;
+  const respValPlugin = {
+    id:'respVal',
+    afterDatasetsDraw(chart){
+      const ctx=chart.ctx;
+      chart.data.datasets.forEach((ds,i)=>{
+        chart.getDatasetMeta(i).data.forEach((bar,idx)=>{
+          const v=ds.data[idx];
+          const pct=totalResp?(v/totalResp*100).toFixed(1)+'%':'';
+          ctx.save();
+          ctx.fillStyle='#0B3D24';
+          ctx.font='bold 11px IBM Plex Mono';
+          ctx.textAlign='left';
+          ctx.textBaseline='middle';
+          ctx.fillText(`${v}  (${pct})`, bar.x+6, bar.y);
+          ctx.restore();
+        });
+      });
+    }
+  };
   new Chart(document.getElementById('chart-respons'),{
     type:'bar',
     data:{labels:['Tidak Dibalas','Dibalas'],datasets:[{
@@ -392,7 +454,8 @@ function render(data){
       backgroundColor:['#C9BBA0',PALET.inkSoft],borderRadius:3,maxBarThickness:60
     }]},
     options:{indexAxis:'y',plugins:{legend:{display:false}},
-      scales:{x:{beginAtZero:true,grid:{color:'#EFE6D2'}},y:{grid:{display:false}}}}
+      scales:{x:{beginAtZero:true,grid:{color:'#EFE6D2'}},y:{grid:{display:false}}}},
+    plugins:[respValPlugin]
   });
 
   // ── Highlight: ulasan paling disukai positif & negatif ──
@@ -403,7 +466,7 @@ function render(data){
   const hlKartu = (r, jenis) => r ? `
     <div class="highlight-kartu">
       <div class="label-hl"><span class="dot ${jenis}"></span>
-        ${jenis==='pos'?'Apresiasi Terpopuler':'Keluhan Terpopuler'} · ${r.likes||0} suka
+        ${jenis==='pos'?'Apresiasi Terpilih':'Keluhan Terpilih'} · ${r.likes||0} suka
       </div>
       <div class="isi">"${r.isi||''}"</div>
       <div class="meta">${r.nama||'–'} · ${'★'.repeat(r.bintang)}${'☆'.repeat(5-r.bintang)} · ${formatTanggal(r.tanggal)}</div>
@@ -454,7 +517,7 @@ function renderTabel(){
   tbody.innerHTML = tampil.map(r=>{
     const kelas = r.bintang>=4?'positif':r.bintang===3?'netral':'negatif';
     const cari = document.getElementById('filter-cari').value.toLowerCase().trim();
-    let isi = (r.isi||'').slice(0,160)+(r.isi||'').length>160?'…':'';
+    const isiRaw=r.isi||r.content||''; let isi=isiRaw.slice(0,160)+(isiRaw.length>160?'…':'');
     if(cari) isi = isi.replace(new RegExp(cari,'gi'), m=>`<mark style="background:#FFF176;border-radius:2px">${m}</mark>`);
     const likesKelas = (r.likes||0)>=5?'tinggi':'';
     return `<tr>
