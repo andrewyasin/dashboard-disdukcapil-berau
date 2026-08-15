@@ -3,743 +3,562 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rekap Tahapan DSSD — KAB. BERAU</title>
+<title>Dasbor Ulasan — Aplikasi Disdukcapil Berau</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<script src="chart.umd.min.js"></script>
 <style>
-:root {
-  --hijau:        #1A6B2F;
-  --hijau-tua:    #134D22;
-  --hijau-muda:   #218A3C;
-  --hijau-terang: #2FA34C;
-  --hijau-rim:    rgba(26,107,47,0.30);
-  --emas:         #D4A017;
-  --emas-terang:  #F0C040;
-  --emas-deep:    #A8790E;
-  --emas-muda:    rgba(212,160,23,0.13);
-  --emas-rim:     rgba(212,160,23,0.4);
-  --merah-muda:   rgba(231,76,60,0.12);
+  :root{
+    --ink:#0B3D24;
+    --ink-soft:#3F6B52;
+    --paper:#F8F6EC;
+    --paper-deep:#EFE9D2;
+    --stamp-red:#C1442D;
+    --sawah-green:#00923F;
+    --kuningan:#E8B900;
+    --line:#D9CFA0;
+    --shadow:0 2px 0 rgba(11,61,36,0.07);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    background-image:
+      radial-gradient(circle at 100% 0%,rgba(201,168,106,.10),transparent 40%),
+      repeating-linear-gradient(0deg,rgba(27,42,74,.025) 0,rgba(27,42,74,.025) 1px,transparent 1px,transparent 28px);
+    color:var(--ink);
+    font-family:'IBM Plex Sans',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+  .wrap{max-width:1100px;margin:0 auto;padding:0 24px 80px;}
 
-  --bg:           #F5FAF5;
-  --surface:      #FFFFFF;
-  --border:       rgba(19,77,34,0.12);
-  --border-strong:rgba(19,77,34,0.22);
+  /* KOP */
+  .kop{border-bottom:3px double var(--ink);padding:36px 0 22px;display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;}
+  .kop-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);margin:0 0 10px;}
+  .kop h1{font-family:'Lora',serif;font-weight:700;font-size:clamp(28px,4vw,40px);line-height:1.15;margin:0;letter-spacing:-.01em;}
+  .kop .sub{font-size:14px;color:var(--ink-soft);margin-top:8px;max-width:460px;}
+  .meta-block{text-align:right;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink-soft);line-height:1.7;}
+  .meta-block strong{color:var(--ink);}
 
-  --text:         #14301D;
-  --text2:        #3E5E48;
-  --muted:        #6B8874;
+  /* STEMPEL */
+  .stempel-row{display:flex;align-items:center;gap:28px;padding:30px 0 8px;flex-wrap:wrap;}
+  .stempel{width:128px;height:128px;border-radius:50%;border:3px solid var(--sawah-green);display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--sawah-green);transform:rotate(-7deg);flex-shrink:0;position:relative;background:radial-gradient(circle,rgba(0,146,63,.07),transparent 70%);opacity:0;animation:stamp-in .5s .15s cubic-bezier(.2,1.4,.4,1) forwards;}
+  .stempel::before{content:'';position:absolute;inset:8px;border:1px solid var(--sawah-green);border-radius:50%;opacity:.55;}
+  .stempel .nilai{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:30px;line-height:1;}
+  .stempel .label{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;margin-top:4px;}
+  @keyframes stamp-in{from{opacity:0;transform:rotate(-22deg) scale(1.5);}to{opacity:1;transform:rotate(-7deg) scale(1);}}
+  .ringkasan-cepat{display:flex;gap:28px;flex-wrap:wrap;font-family:'IBM Plex Mono',monospace;}
+  .ringkasan-cepat .item .n{font-size:26px;font-weight:700;color:var(--ink);display:block;}
+  .ringkasan-cepat .item .t{font-size:11px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.06em;}
 
-  --dtext:        #F7F9F4;
-  --dtext2:       #D6E4D9;
-  --dmuted:       #9FC2A6;
 
-  --font:         'Plus Jakarta Sans', sans-serif;
-  --mono:         'DM Mono', monospace;
-}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;overflow-x:hidden;max-width:100vw}
-body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.6;overflow-x:hidden;max-width:100vw}
 
-/* HEADER (tetap gelap sebagai aksen brand) */
-.site-header{background:var(--hijau-tua);border-bottom:2px solid var(--emas);padding:0 2rem;position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;height:68px;box-shadow:0 2px 16px rgba(0,0,0,0.25)}
-.logo-text{font-size:14px;font-weight:700;color:var(--emas-terang);letter-spacing:.01em}
-.logo-sub{font-size:11px;color:var(--dtext2);font-weight:400}
-.header-right{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.live-dot{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--emas-terang);font-family:var(--mono)}
-.live-dot::before{content:'';width:7px;height:7px;background:var(--emas-terang);border-radius:50%;animation:blink 2s infinite}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
-.last-updated{font-size:11px;color:var(--dmuted);font-family:var(--mono)}
+  /* PASAL */
+  .pasal{margin-top:54px;}
+  .pasal-head{display:flex;align-items:baseline;gap:14px;margin-bottom:18px;}
+  .pasal-num{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--kuningan);background:var(--ink);padding:3px 9px;border-radius:2px;letter-spacing:.04em;}
+  .pasal-head h2{font-family:'Lora',serif;font-weight:600;font-style:italic;font-size:21px;margin:0;color:var(--ink);}
+  .pasal-line{flex:1;height:1px;background:var(--line);margin-left:4px;}
 
-/* BANNER (tetap gelap, sebagai aksen brand & titik kontras) */
-.hero-banner{background:linear-gradient(135deg,var(--hijau-tua) 0%,var(--hijau) 55%,var(--hijau-terang) 100%);border-bottom:3px solid var(--emas);padding:1.5rem 2rem;position:relative;overflow:hidden}
-.hero-banner::before{content:'🐢';position:absolute;right:2rem;top:50%;transform:translateY(-50%);font-size:80px;opacity:.09;user-select:none}
-.hero-inner{max-width:1280px;margin:0 auto}
-.hero-eyebrow{font-size:11px;font-weight:600;letter-spacing:.12em;color:var(--emas-terang);text-transform:uppercase;margin-bottom:4px}
-.hero-title{font-size:22px;font-weight:700;color:#fff;margin-bottom:4px;line-height:1.3}
-.hero-sub{font-size:13px;color:var(--dtext2)}
+  /* GRID & KARTU */
+  .grid{display:grid;gap:18px;}
+  .grid-2{grid-template-columns:1fr 1fr;}
+  .grid-3{grid-template-columns:1fr 1fr 1fr;}
+  @media(max-width:760px){
+    .grid-2,.grid-3{grid-template-columns:1fr;}
+    .kop{flex-direction:column;align-items:flex-start;}
+    .meta-block{text-align:left;}
+    .ringkasan-cepat{gap:16px;}
+    .ringkasan-cepat .item .n{font-size:22px;}
+  }
+  .kartu{background:#FFFDF8;border:1px solid var(--line);border-radius:3px;padding:20px 22px;box-shadow:var(--shadow);}
+  .kartu h3{font-family:'IBM Plex Sans',sans-serif;font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-soft);margin:0 0 16px;}
+  .kartu canvas{max-height:280px;}
 
-/* TAHUN SWITCHER (cerah, jembatan ke konten) */
-.tahun-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:.75rem 2rem;display:flex;align-items:center;gap:10px}
-.tahun-label{font-size:12px;color:var(--muted);font-weight:500;margin-right:4px}
-.tahun-btn{font-size:13px;font-weight:600;font-family:var(--mono);padding:5px 16px;border-radius:999px;border:1.5px solid var(--border-strong);background:var(--surface);color:var(--text2);cursor:pointer;transition:all .15s;letter-spacing:.05em}
-.tahun-btn:hover{border-color:var(--emas);color:var(--emas-deep)}
-.tahun-btn.active{background:var(--emas);border-color:var(--emas);color:var(--hijau-tua)}
+  /* FILTER BAR */
+  .filter-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;align-items:center;}
+  .filter-bar label{font-size:12px;font-family:'IBM Plex Mono',monospace;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.05em;}
+  .filter-bar select, .filter-bar input{
+    font-family:'IBM Plex Sans',sans-serif;font-size:13px;
+    border:1px solid var(--line);border-radius:3px;
+    background:var(--paper);color:var(--ink);
+    padding:6px 10px;cursor:pointer;
+    outline:none;
+  }
+  .filter-bar select:focus, .filter-bar input:focus{border-color:var(--sawah-green);}
+  .filter-bar .reset-btn{
+    font-size:12px;font-family:'IBM Plex Mono',monospace;
+    background:none;border:1px solid var(--line);border-radius:3px;
+    color:var(--ink-soft);padding:6px 12px;cursor:pointer;
+    transition:all .15s;
+  }
+  .filter-bar .reset-btn:hover{border-color:var(--sawah-green);color:var(--sawah-green);}
+  .jumlah-tampil{font-size:12px;font-family:'IBM Plex Mono',monospace;color:var(--ink-soft);margin-left:auto;}
 
-/* MAIN */
-main{max-width:1280px;margin:0 auto;padding:1.75rem 2rem}
+  /* TABEL */
+  .tabel-wrap{overflow-x:auto;}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;}
+  @media(max-width:600px){table{font-size:12px;}}
+  thead th{text-align:left;font-family:'IBM Plex Mono',monospace;font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-soft);border-bottom:1.5px solid var(--ink);padding:8px 10px;white-space:nowrap;}
+  tbody td{padding:10px;border-bottom:1px solid var(--line);vertical-align:top;}
+  tbody tr:hover{background:var(--paper-deep);}
+  .bintang-pill{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:12px;padding:2px 7px;border-radius:10px;white-space:nowrap;}
+  .bintang-pill.positif{background:rgba(0,146,63,.13);color:var(--sawah-green);}
+  .bintang-pill.netral{background:rgba(232,185,0,.22);color:#7a6000;}
+  .bintang-pill.negatif{background:rgba(193,68,45,.12);color:var(--stamp-red);}
+  .isi-review{color:var(--ink-soft);max-width:360px;}
+  .likes-badge{font-size:11px;font-family:'IBM Plex Mono',monospace;color:var(--ink-soft);}
+  .likes-badge.tinggi{color:var(--sawah-green);font-weight:700;}
+  .tabel-kosong{text-align:center;padding:32px;color:var(--ink-soft);font-style:italic;}
+  .muat-lagi{display:block;width:100%;margin-top:14px;padding:10px;background:none;border:1px dashed var(--line);border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink-soft);cursor:pointer;transition:all .15s;}
+  .muat-lagi:hover{border-color:var(--sawah-green);color:var(--sawah-green);}
 
-/* STAT CARDS */
-.stat-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:1.5rem}
-.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1rem 1.25rem;transition:border-color .2s,transform .15s,box-shadow .2s;position:relative;overflow:hidden;box-shadow:0 1px 3px rgba(19,77,34,.05)}
-.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--hijau-muda);opacity:0;transition:opacity .2s}
-.stat-card:hover{border-color:var(--hijau-rim);transform:translateY(-1px);box-shadow:0 6px 16px rgba(19,77,34,.1)}
-.stat-card:hover::before{opacity:1}
-.stat-card.accent{border-color:var(--emas-rim);background:var(--emas-muda)}
-.stat-card.accent::before{background:var(--emas);opacity:1}
-.sc-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:8px}
-.sc-value{font-size:26px;font-weight:700;font-family:var(--mono);color:var(--text)}
-.sc-value.hijau{color:#1E9E46}
-.sc-value.emas{color:var(--emas-deep)}
-.sc-value.merah{color:#D9362A}
+  /* HIGHLIGHT ULASAN */
+  .highlight-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  @media(max-width:600px){.highlight-grid{grid-template-columns:1fr;}}
+  .highlight-kartu{background:#FFFDF8;border:1px solid var(--line);border-radius:3px;padding:16px 18px;}
+  .highlight-kartu .label-hl{font-size:10px;font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+  .dot{width:8px;height:8px;border-radius:50%;display:inline-block;}
+  .dot.pos{background:var(--sawah-green);}
+  .dot.neg{background:var(--stamp-red);}
+  .highlight-kartu .isi{font-size:13.5px;color:var(--ink);line-height:1.6;margin-bottom:10px;}
+  .highlight-kartu .meta{font-size:11px;font-family:'IBM Plex Mono',monospace;color:var(--ink-soft);}
 
-/* PROGRESS */
-.progress-section{background:var(--surface);border:1px solid var(--emas-rim);border-radius:12px;padding:1.25rem 1.5rem;margin-bottom:1.5rem;box-shadow:0 1px 3px rgba(19,77,34,.05)}
-.ps-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem}
-.ps-title{font-size:13px;font-weight:600;color:var(--text2)}
-.ps-pct{font-size:24px;font-weight:700;font-family:var(--mono);color:var(--emas-deep)}
-.progress-bar-wrap{height:12px;background:rgba(19,77,34,0.08);border-radius:999px;overflow:hidden;margin-bottom:10px;border:1px solid rgba(19,77,34,0.06)}
-.progress-bar-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--hijau-muda),var(--emas-terang));transition:width 1.2s cubic-bezier(.4,0,.2,1);position:relative}
-.progress-bar-fill::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,0.35) 50%,transparent 100%);border-radius:999px}
-.progress-legend{display:flex;gap:1.5rem;flex-wrap:wrap}
-.pl-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted)}
-.pl-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+  /* KATEGORI */
+  .kat-list{display:flex;flex-direction:column;gap:10px;}
+  .kat-row{display:flex;align-items:center;gap:10px;}
+  .kat-row .nama{width:150px;flex-shrink:0;font-size:12.5px;color:var(--ink);}
+  .kat-row .bar-bg{flex:1;height:10px;background:var(--paper-deep);border-radius:5px;overflow:hidden;}
+  .kat-row .bar-fg{height:100%;background:var(--ink-soft);border-radius:5px;}
+  .kat-row .jumlah{font-family:'IBM Plex Mono',monospace;font-size:12px;width:34px;text-align:right;color:var(--ink-soft);}
 
-/* CONTROLS */
-.controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:1rem}
-.search-wrap{position:relative;flex:1;min-width:200px}
-.search-wrap input{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px 8px 36px;color:var(--text);font-family:var(--font);font-size:13px;outline:none;transition:border-color .2s}
-.search-wrap input:focus{border-color:var(--emas)}
-.search-wrap input::placeholder{color:var(--muted)}
-.search-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:15px;pointer-events:none}
-.filter-btn{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:7px 13px;color:var(--text2);font-family:var(--font);font-size:12px;cursor:pointer;transition:all .15s;white-space:nowrap;font-weight:500}
-.filter-btn:hover{border-color:var(--emas);color:var(--emas-deep)}
-.filter-btn.active{border-color:var(--emas);color:var(--hijau-tua);background:var(--emas);font-weight:600}
-.sort-select{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:7px 12px;color:var(--text2);font-family:var(--font);font-size:12px;outline:none;cursor:pointer;appearance:none}
-.sort-select:focus{border-color:var(--emas)}
+  /* FOOTER */
+  footer{margin-top:60px;padding-top:22px;border-top:1px solid var(--line);font-size:12px;color:var(--ink-soft);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+  footer code{font-family:'IBM Plex Mono',monospace;background:var(--paper-deep);padding:2px 6px;border-radius:3px;}
 
-/* EXPORT */
-.export-wrap{position:relative}
-.export-btn{background:var(--surface);border:1px solid var(--border-strong);border-radius:8px;padding:7px 13px;color:var(--emas-deep);font-family:var(--font);font-size:12px;cursor:pointer;transition:all .15s;white-space:nowrap;font-weight:600;display:flex;align-items:center;gap:6px}
-.export-btn:hover{border-color:var(--emas);background:var(--emas-muda)}
-.export-menu{position:fixed;background:var(--surface);border:1px solid var(--border-strong);border-radius:10px;box-shadow:0 10px 30px rgba(19,77,34,.18);min-width:190px;overflow:hidden;z-index:200;display:none}
-.export-menu.open{display:block}
-.export-menu button{width:100%;text-align:left;background:transparent;border:none;padding:10px 14px;color:var(--text2);font-family:var(--font);font-size:12.5px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:10px;transition:background .12s}
-.export-menu button:hover{background:var(--emas-muda);color:var(--emas-deep)}
-.export-menu button:hover .export-ico{transform:scale(1.08)}
-.export-menu button + button{border-top:1px solid var(--border)}
-.export-ico{width:26px;height:26px;flex-shrink:0;border-radius:7px;display:flex;align-items:center;justify-content:center;transition:transform .15s}
-.export-ico svg{width:15px;height:15px}
-.export-ico.xlsx{background:rgba(30,158,70,.14);border:1px solid rgba(30,158,70,.3)}
-.export-ico.csv{background:var(--emas-muda);border:1px solid var(--border-emas,var(--emas-rim))}
-.export-ico.pdf{background:rgba(217,54,42,.13);border:1px solid rgba(217,54,42,.3)}
-
-/* TABLE */
-.table-wrap{border:1px solid var(--border);border-radius:12px;overflow:hidden;overflow-x:auto;box-shadow:0 4px 20px rgba(19,77,34,.08)}
-table{width:100%;border-collapse:collapse;min-width:780px;background:var(--surface)}
-thead th{background:var(--hijau-tua);padding:10px 14px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--emas-terang);border-bottom:2px solid var(--emas);white-space:nowrap}
-tbody tr{border-bottom:1px solid var(--border);transition:background .1s}
-tbody tr:last-child{border-bottom:none}
-tbody tr:hover{background:rgba(26,107,47,0.05)}
-td{padding:10px 14px;font-size:13px;color:var(--text2);vertical-align:middle}
-.td-kode{font-family:var(--mono);font-size:11px;color:var(--emas-deep);font-weight:600}
-.td-nama{font-weight:600;color:var(--text);max-width:280px}
-.td-nama span{font-size:10px;font-weight:400;color:var(--muted);display:block;margin-top:1px}
-.td-num{font-family:var(--mono);font-size:12px;text-align:right}
-.td-num.total{color:var(--text2)}
-.td-bar-cell{width:130px}
-.mini-bar-wrap{height:6px;background:rgba(19,77,34,0.08);border-radius:99px;overflow:hidden;margin-bottom:4px}
-.mini-bar{height:100%;border-radius:99px;transition:width .6s ease}
-.mini-bar.full{background:linear-gradient(90deg,#1E9E46,#3FCB6B)}
-.mini-bar.high{background:linear-gradient(90deg,var(--hijau-muda),#5ECC6E)}
-.mini-bar.mid{background:linear-gradient(90deg,var(--emas),var(--emas-terang))}
-.mini-bar.low{background:linear-gradient(90deg,#C0392B,#E74C3C)}
-.mini-pct{font-size:10px;color:var(--muted);font-family:var(--mono)}
-.tag{display:inline-block;font-size:10px;font-weight:700;padding:1px 7px;border-radius:4px;font-family:var(--mono);margin-left:4px;letter-spacing:.03em}
-.tag-full{background:rgba(30,158,70,.14);color:#1E9E46;border:1px solid rgba(30,158,70,.3)}
-.tag-high{background:rgba(26,107,47,.12);color:#1F7A3D;border:1px solid rgba(26,107,47,.25)}
-.tag-mid{background:var(--emas-muda);color:var(--emas-deep);border:1px solid var(--border-emas,var(--emas-rim))}
-.tag-low{background:var(--merah-muda);color:#D9362A;border:1px solid rgba(217,54,42,.3)}
-.tag-zero{background:rgba(19,77,34,.05);color:var(--muted);border:1px solid var(--border)}
-.empty-state{text-align:center;padding:4rem;color:var(--muted);font-size:13px}
-
-/* FOOTER (tetap gelap) */
-footer{text-align:center;padding:1.5rem 2rem;color:var(--dmuted);font-size:11px;border-top:1px solid var(--border);margin-top:2.5rem;background:var(--hijau-tua)}
-footer a{color:var(--emas-terang);text-decoration:none}
-footer a:hover{text-decoration:underline}
-.footer-divider{margin:0 8px;opacity:.4}
-
-@media(max-width:640px){
-  .site-header{padding:0 1rem;height:auto;min-height:60px;flex-wrap:wrap;gap:8px;padding-top:10px;padding-bottom:10px}
-  .hero-banner{padding:1.25rem 1rem}
-  .tahun-bar{padding:.75rem 1rem}
-  main{padding:1rem}
-  .hero-banner::before{display:none}
-  .last-updated{display:none}
-}
+  /* STATUS */
+  #status{padding:60px 0;text-align:center;color:var(--ink-soft);font-family:'IBM Plex Mono',monospace;font-size:13px;}
+  .hidden{display:none !important;}
+  @media(prefers-reduced-motion:reduce){.stempel{animation:none;opacity:1;}}
 </style>
 </head>
 <body>
+<div class="wrap">
 
-<header class="site-header">
-  <div>
-    <div class="logo-text">PEMERINTAH KAB. BERAU</div>
-    <div class="logo-sub">e-Walidata · Rekap Tahapan DSSD</div>
-  </div>
-  <div class="header-right">
-    <span class="live-dot" id="live-label">memuat...</span>
-    <span class="last-updated" id="last-updated"></span>
-  </div>
-</header>
-
-<div class="hero-banner">
-  <div class="hero-inner">
-    <div class="hero-eyebrow">⭐ Batiwakkal · Kabupaten Berau (6403)</div>
-    <div class="hero-title">Rekap Keterisian Data Statistik Sektoral Daerah</div>
-    <div class="hero-sub">Dashboard monitoring progress DSSD · e-Walidata SIPD · Tahun <span id="tahun-hero">2025</span></div>
-  </div>
-</div>
-
-<div class="tahun-bar">
-  <span class="tahun-label">Tahun Data:</span>
-  <button class="tahun-btn" onclick="switchTahun('2023',this)">2023</button>
-  <button class="tahun-btn" onclick="switchTahun('2024',this)">2024</button>
-  <button class="tahun-btn active" onclick="switchTahun('2025',this)">2025</button>
-</div>
-
-<main>
-  <div class="stat-cards">
-    <div class="stat-card accent">
-      <div class="sc-label">Total Urusan</div>
-      <div class="sc-value emas" id="s-urusan">—</div>
+  <div class="kop">
+    <div>
+      <p class="kop-eyebrow">Pemerintah Kabupaten Berau</p>
+      <h1>Dasbor Ulasan Publik<br>Aplikasi Disdukcapil Berau</h1>
+      <p class="sub">Pemantauan ulasan pengguna aplikasi layanan kependudukan digital Kabupaten Berau, dihimpun otomatis dari Google Play Store.</p>
     </div>
-    <div class="stat-card">
-      <div class="sc-label">Data Induk</div>
-      <div class="sc-value" id="s-induk">—</div>
-    </div>
-    <div class="stat-card">
-      <div class="sc-label">Data Digunakan</div>
-      <div class="sc-value" id="s-digunakan">—</div>
-    </div>
-    <div class="stat-card">
-      <div class="sc-label">Sudah Terisi</div>
-      <div class="sc-value hijau" id="s-terisi">—</div>
-    </div>
-    <div class="stat-card">
-      <div class="sc-label">Belum Terisi</div>
-      <div class="sc-value emas" id="s-belum">—</div>
-    </div>
-    <div class="stat-card">
-      <div class="sc-label">Tidak Aktif</div>
-      <div class="sc-value merah" id="s-disabled">—</div>
+    <div class="meta-block">
+      <div>Sumber: <strong>Google Play Store</strong></div>
+      <div>Pembaruan: <strong id="meta-update">memuat…</strong></div>
+      <div>Periode: <strong id="meta-periode">memuat…</strong></div>
     </div>
   </div>
 
-  <div class="progress-section">
-    <div class="ps-header">
-      <div class="ps-title">📊 Progress Keterisian Keseluruhan</div>
-      <div class="ps-pct" id="overall-pct">—%</div>
-    </div>
-    <div class="progress-bar-wrap">
-      <div class="progress-bar-fill" id="overall-bar" style="width:0%"></div>
-    </div>
-    <div class="progress-legend">
-      <div class="pl-item"><div class="pl-dot" style="background:#5ECC6E"></div>Sudah terisi</div>
-      <div class="pl-item"><div class="pl-dot" style="background:var(--emas-terang)"></div>Belum terisi</div>
-      <div class="pl-item"><div class="pl-dot" style="background:#B7C7BA"></div>Tidak aktif (disabled)</div>
-    </div>
-  </div>
+  <div id="status">Memuat data ulasan…</div>
 
-  <div class="controls">
-    <div class="search-wrap">
-      <span class="search-icon">⌕</span>
-      <input type="text" id="search" placeholder="Cari nama urusan atau kode..." oninput="renderTable()">
-    </div>
-    <button class="filter-btn active" id="filter-all" onclick="setFilter(this,'all')">Semua</button>
-    <button class="filter-btn" id="filter-full" onclick="setFilter(this,'full')">100%</button>
-    <button class="filter-btn" id="filter-high" onclick="setFilter(this,'high')">≥50%</button>
-    <button class="filter-btn" id="filter-low" onclick="setFilter(this,'low')">&lt;50%</button>
-    <button class="filter-btn" id="filter-zero" onclick="setFilter(this,'zero')">0%</button>
-    <select class="sort-select" id="sort-sel" onchange="renderTable()">
-      <option value="kode">Urut: Kode</option>
-      <option value="pct-desc">Urut: % Terisi ↓</option>
-      <option value="pct-asc">Urut: % Terisi ↑</option>
-      <option value="jml-desc">Urut: Jml Data ↓</option>
-    </select>
-    <div class="export-wrap">
-      <button class="export-btn" id="export-toggle" onclick="toggleExportMenu(event)">
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:13px;height:13px">
-          <path d="M12 3v12m0 0l-4.5-4.5M12 15l4.5-4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        Export
-      </button>
-      <div class="export-menu" id="export-menu">
-        <button onclick="exportExcel()">
-          <span class="export-ico xlsx">
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="3" y="3" width="18" height="18" rx="2.5" fill="#5ECC6E"/>
-              <path d="M7.5 8l2.6 4-2.6 4h1.9l1.7-2.7L12.8 16h1.9l-2.6-4 2.6-4h-1.9l-1.7 2.7L9.4 8H7.5z" fill="#0D3618"/>
-              <rect x="14.5" y="8" width="3" height="1.4" fill="#0D3618" opacity=".55"/>
-              <rect x="14.5" y="10.3" width="3" height="1.4" fill="#0D3618" opacity=".55"/>
-            </svg>
-          </span>
-          Excel (.xlsx)
-        </button>
-        <button onclick="exportCSV()">
-          <span class="export-ico csv">
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="3" y="3" width="18" height="18" rx="2.5" fill="#F0C040"/>
-              <rect x="6.5" y="7" width="11" height="1.6" rx=".8" fill="#0D3618"/>
-              <rect x="6.5" y="10.5" width="11" height="1.6" rx=".8" fill="#0D3618"/>
-              <rect x="6.5" y="14" width="7" height="1.6" rx=".8" fill="#0D3618"/>
-            </svg>
-          </span>
-          CSV
-        </button>
-        <button onclick="exportPDF()">
-          <span class="export-ico pdf">
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M6 2.5h8l4 4V20a1.5 1.5 0 01-1.5 1.5h-11A1.5 1.5 0 014 20V4A1.5 1.5 0 016 2.5z" fill="#E74C3C"/>
-              <path d="M14 2.5v3.2a.8.8 0 00.8.8H18" fill="#c0392b"/>
-              <text x="12" y="16.5" text-anchor="middle" font-family="DM Mono, monospace" font-size="6.5" font-weight="700" fill="#F7F9F4">PDF</text>
-            </svg>
-          </span>
-          PDF
-        </button>
+  <div id="konten" class="hidden">
+
+    <!-- RINGKASAN -->
+    <div class="stempel-row">
+      <div class="stempel">
+        <span class="nilai" id="stempel-rating">–</span>
+        <span class="label">dari 5.0</span>
+      </div>
+      <div>
+        <div class="ringkasan-cepat">
+          <div class="item"><span class="n" id="ring-total">–</span><span class="t">Total Ulasan</span></div>
+          <div class="item"><span class="n" id="ring-positif">–</span><span class="t">Sentimen Positif</span></div>
+          <div class="item"><span class="n" id="ring-negatif">–</span><span class="t">Sentimen Negatif</span></div>
+          <div class="item"><span class="n" id="ring-respons">–</span><span class="t">Direspons Developer</span></div>
+        </div>
+
       </div>
     </div>
+
+    <!-- 01: DISTRIBUSI -->
+    <div class="pasal">
+      <div class="pasal-head"><span class="pasal-num">01</span><h2>Distribusi Penilaian</h2><span class="pasal-line"></span></div>
+      <div class="grid grid-2">
+        <div class="kartu"><h3>Distribusi Rating Bintang</h3><canvas id="chart-bintang"></canvas></div>
+        <div class="kartu"><h3>Proporsi Sentimen</h3><canvas id="chart-sentimen"></canvas></div>
+      </div>
+    </div>
+
+    <!-- 02: TREN -->
+    <div class="pasal">
+      <div class="pasal-head"><span class="pasal-num">02</span><h2>Tren dari Waktu ke Waktu</h2><span class="pasal-line"></span></div>
+      <div class="grid grid-2">
+        <div class="kartu"><h3>Tren Ulasan per Tahun</h3><canvas id="chart-tren"></canvas></div>
+        <div class="kartu"><h3>Rata-rata Bintang per Tahun</h3><canvas id="chart-avg-tahun"></canvas></div>
+      </div>
+    </div>
+
+    <!-- 03: TOPIK -->
+    <div class="pasal">
+      <div class="pasal-head"><span class="pasal-num">03</span><h2>Topik &amp; Responsivitas</h2><span class="pasal-line"></span></div>
+      <div class="grid grid-2">
+        <div class="kartu"><h3>Frekuensi Topik Ulasan</h3><div class="kat-list" id="kat-list"></div></div>
+        <div class="kartu"><h3>Responsivitas Developer</h3><canvas id="chart-respons"></canvas></div>
+      </div>
+    </div>
+
+    <!-- 04: HIGHLIGHT -->
+    <div class="pasal">
+      <div class="pasal-head"><span class="pasal-num">04</span><h2>Sorotan Ulasan</h2><span class="pasal-line"></span></div>
+      <div class="highlight-grid" id="highlight-grid"></div>
+    </div>
+
+    <!-- 05: ULASAN -->
+    <div class="pasal">
+      <div class="pasal-head"><span class="pasal-num">05</span><h2>Jelajahi Semua Ulasan</h2><span class="pasal-line"></span></div>
+      <div class="kartu">
+        <div class="filter-bar">
+          <label>Filter:</label>
+          <select id="filter-sentimen">
+            <option value="">Semua Sentimen</option>
+            <option value="positif">✅ Positif (4-5★)</option>
+            <option value="netral">➖ Netral (3★)</option>
+            <option value="negatif">❌ Negatif (1-2★)</option>
+          </select>
+          <select id="filter-bintang">
+            <option value="">Semua Bintang</option>
+            <option value="5">★★★★★ 5</option>
+            <option value="4">★★★★☆ 4</option>
+            <option value="3">★★★☆☆ 3</option>
+            <option value="2">★★☆☆☆ 2</option>
+            <option value="1">★☆☆☆☆ 1</option>
+          </select>
+          <input type="text" id="filter-cari" placeholder="🔍 Cari kata…" style="min-width:140px;">
+          <button class="reset-btn" onclick="resetFilter()">Reset</button>
+          <span class="jumlah-tampil" id="jumlah-tampil"></span>
+        </div>
+        <div class="tabel-wrap">
+          <table>
+            <thead>
+              <tr><th>Pengguna</th><th>Isi Ulasan</th><th>Bintang</th><th>Suka</th><th>Tanggal</th><th>Versi</th></tr>
+            </thead>
+            <tbody id="tabel-review"></tbody>
+          </table>
+        </div>
+        <button class="muat-lagi hidden" id="btn-muat-lagi" onclick="muatLagi()">Tampilkan lebih banyak ▾</button>
+      </div>
+    </div>
+
   </div>
 
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>No</th>
-          <th>Kode</th>
-          <th style="min-width:280px">Nama Urusan</th>
-          <th>Data Induk</th>
-          <th>Digunakan</th>
-          <th>Terisi</th>
-          <th>Belum Terisi</th>
-          <th>Ver. Walidata</th>
-          <th>Ver. Pembina</th>
-          <th>Final</th>
-          <th style="min-width:130px">% Keterisian</th>
-        </tr>
-      </thead>
-      <tbody id="tbody">
-        <tr><td colspan="11"><div class="empty-state">Memuat data...</div></td></tr>
-      </tbody>
-    </table>
-  </div>
-</main>
+  <footer>
+    <span>Dasbor Ulasan Aplikasi Disdukcapil Kabupaten Berau</span>
+    <span>Data diperbarui otomatis harian via <code>GitHub Actions</code></span>
+  </footer>
+</div>
 
-<footer>
-  <strong style="color:var(--emas-terang)">Pemerintah Kabupaten Berau</strong>
-  <span class="footer-divider">·</span>
-  Data bersumber dari <a href="https://sipd.go.id/ewalidata/" target="_blank">e-Walidata SIPD</a>
-  <br><span id="footer-updated" style="margin-top:4px;display:inline-block;"></span>
-</footer>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <script>
-let allData = [];
-let currentFilter = 'all';
-let currentTahun = '2025';
-let currentRows = []; // rows yang sedang tampil (sudah difilter+diurutkan) - dipakai untuk export
 
-const EXCLUDE_KODE = ['3.28','3.29','5.06','5.07','9.01','9.02','9.03','7.02','7.03'];
-
-// Pemetaan kode urusan -> Dinas/OPD penanggung jawab (Kab. Berau)
-// Sumber: daftar 33 OPD resmi Pemkab Berau (dikonfirmasi langsung).
-// Setiap kode dipetakan ke ARRAY OPD (1 anggota untuk urusan tunggal, >1 untuk urusan yang
-// ditangani beberapa OPD sekaligus) supaya tiap OPD bisa dihitung sebagai entitas terpisah.
-const DINAS_MAP = {
-  '1.01': ['Dinas Pendidikan (Disdik)'],
-  '1.02': ['Dinas Kesehatan'],
-  '1.03': ['Dinas Pekerjaan Umum dan Penataan Ruang (PUPR)'],
-  '1.04': ['Dinas Perumahan dan Kawasan Permukiman (Disperkim)'],
-  '1.05': ['Satuan Polisi Pamong Praja (Satpol PP)', 'Badan Penanggulangan Bencana Daerah (BPBD)', 'Dinas Kebakaran'],
-  '1.06': ['Dinas Sosial'],
-  '2.07': ['Dinas Tenaga Kerja dan Transmigrasi (Disnakertrans)'],
-  '2.08': ['Dinas Pengendalian Penduduk, KB, Pemberdayaan Perempuan dan Perlindungan Anak (DPPKBP3A)'],
-  '2.09': ['Dinas Pangan'],
-  '2.10': ['Dinas Pertanahan (Distanah)'],
-  '2.11': ['Dinas Lingkungan Hidup dan Kebersihan (DLHK)'],
-  '2.12': ['Dinas Kependudukan dan Pencatatan Sipil (Disdukcapil)'],
-  '2.13': ['Dinas Pemberdayaan Masyarakat dan Kampung (DPMK)'],
-  '2.14': ['Dinas Pengendalian Penduduk, KB, Pemberdayaan Perempuan dan Perlindungan Anak (DPPKBP3A)'],
-  '2.15': ['Dinas Perhubungan (Dishub)'],
-  '2.16': ['Dinas Komunikasi dan Informatika (Diskominfo)'],
-  '2.17': ['Dinas Koperasi, Perindustrian dan Perdagangan (Diskoperindag)'],
-  '2.18': ['Dinas Penanaman Modal dan PTSP (DPMPTSP)'],
-  '2.19': ['Dinas Kepemudaan dan Olahraga (Dispora)'],
-  '2.20': ['Dinas Komunikasi dan Informatika (Diskominfo)'],
-  '2.21': ['Dinas Komunikasi dan Informatika (Diskominfo)'],
-  '2.22': ['Dinas Kebudayaan dan Pariwisata (Disbudpar)'],
-  '2.23': ['Dinas Perpustakaan dan Kearsipan (Dispusip)'],
-  '2.24': ['Dinas Perpustakaan dan Kearsipan (Dispusip)'],
-  '3.25': ['Dinas Perikanan (Diskan)'],
-  '3.26': ['Dinas Kebudayaan dan Pariwisata (Disbudpar)'],
-  '3.27': ['Dinas Tanaman Pangan, Hortikultura dan Peternakan (DTPHP)', 'Dinas Perkebunan (Disbun)'],
-  '3.30': ['Dinas Koperasi, Perindustrian dan Perdagangan (Diskoperindag)'],
-  '3.31': ['Dinas Koperasi, Perindustrian dan Perdagangan (Diskoperindag)'],
-  '3.32': ['Dinas Tenaga Kerja dan Transmigrasi (Disnakertrans)'],
-  '4.01': ['Sekretariat Daerah (Setda)'],
-  '4.02': ['Sekretariat DPRD (Setwan)'],
-  '5.01': ['Badan Perencanaan, Penelitian dan Pengembangan Daerah (Bapperida)'],
-  '5.02': ['Badan Pengelolaan Keuangan dan Aset Daerah (BPKAD)', 'Badan Pendapatan Daerah (Bapenda)'],
-  '5.03': ['Badan Kepegawaian dan Pengembangan SDM (BKPSDM)'],
-  '5.04': ['Badan Kepegawaian dan Pengembangan SDM (BKPSDM)'],
-  '5.05': ['Badan Perencanaan, Penelitian dan Pengembangan Daerah (Bapperida)'],
-  '6.01': ['Inspektorat'],
-  '8.01': ['Badan Kesatuan Bangsa dan Politik (Kesbangpol)'],
-  '7.01': ['Kecamatan (13: Tanjung Redeb, Sambaliung, Gunung Tabur, Teluk Bayur, Tabalar, Biatan, Talisayan, Batu Putih, Biduk-Biduk, Pulau Derawan, Maratua, Segah, Kelay)'],
+const PALET = {
+  ink:'#0B3D24', inkSoft:'#3F6B52', stamp:'#C1442D', sawah:'#00923F', kuningan:'#E8B900',
+  bintang:['#C1442D','#D9824F','#E8B900','#5FA86E','#00923F']
 };
-function dinasList(kode) { return DINAS_MAP[kode] || ['—']; }
-function dinasName(kode) { return dinasList(kode).join(' + '); }
+Chart.defaults.font.family = "'IBM Plex Sans',sans-serif";
+Chart.defaults.color = '#3F6B52';
+Chart.defaults.borderColor = '#D8CBA8';
 
-// Urusan yang ditangani lebih dari satu OPD sekaligus (diturunkan otomatis dari DINAS_MAP).
-// Karena data sumber hanya agregat (tidak dipecah per-OPD), status per-OPD di bawah ini
-// adalah ESTIMASI berdasarkan % keterisian keseluruhan, bukan angka pasti per dinas.
-function multiDinasNote(kode, p) {
-  const list = dinasList(kode);
-  if (list.length < 2) return '';
-  const n = list.length;
-  if (p === 100) return `✓ Estimasi: ${n} OPD (semua) sudah selesai`;
-  if (p > 95)   return `Estimasi: salah satu dari ${n} OPD sudah selesai, sisanya hampir rampung`;
-  return `Estimasi: OPD terkait belum ada yang selesai sepenuhnya`;
-}
+let semuaReview = [];
+let tampilSampai = 20;
 
-const FILE_MAP = {
-  '2023': 'data/rekap-2023.json',
-  '2024': 'data/rekap-2024.json',
-  '2025': 'data/rekap.json',
+// ── Plugin value label di atas bar (horizontal & vertikal) ──
+const valBarPlugin = {
+  id:'valBar',
+  afterDatasetsDraw(chart){
+    const ctx = chart.ctx;
+    const isH = chart.options.indexAxis === 'y';
+    chart.data.datasets.forEach((ds, i) => {
+      chart.getDatasetMeta(i).data.forEach((bar, idx) => {
+        const v = ds.data[idx];
+        if(v == null || v === 0) return;
+        ctx.save();
+        ctx.fillStyle = '#0B3D24';
+        ctx.font = 'bold 11px IBM Plex Mono';
+        if(isH){
+          ctx.textAlign = 'left';
+          ctx.textBaseline = 'middle';
+          const totalV = ds.data.reduce((a,b)=>a+b,0);
+          const pct = totalV ? (v/totalV*100).toFixed(1)+'%' : '';
+          ctx.fillText(`${v}  (${pct})`, bar.x + 6, bar.y);
+        } else {
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'bottom';
+          ctx.fillText(v, bar.x, bar.y - 3);
+        }
+        ctx.restore();
+      });
+    });
+  }
 };
 
-function switchTahun(tahun, btn) {
-  currentTahun = tahun;
-  document.querySelectorAll('.tahun-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById('tahun-hero').textContent = tahun;
-  // Reset filter & search
-  document.getElementById('search').value = '';
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  document.querySelector('.filter-btn').classList.add('active');
-  currentFilter = 'all';
-  document.getElementById('overall-bar').style.width = '0%';
-  loadData(tahun);
+// ── Plugin label % di dalam irisan doughnut ──
+const doughnutLabelPlugin = {
+  id:'doughnutLabel',
+  afterDraw(chart){
+    if(chart.config.type !== 'doughnut') return;
+    const ctx = chart.ctx;
+    const total = chart.data.datasets[0].data.reduce((a,b) => a+b, 0);
+    chart.data.datasets[0].data.forEach((val, i) => {
+      const meta = chart.getDatasetMeta(0);
+      if(meta.data[i].hidden) return;
+      const arc = meta.data[i];
+      const midAngle = (arc.startAngle + arc.endAngle) / 2;
+      const r = (arc.outerRadius + arc.innerRadius) / 2;
+      const x = arc.x + r * Math.cos(midAngle);
+      const y = arc.y + r * Math.sin(midAngle);
+      const pct = (val / total * 100).toFixed(1) + '%';
+      ctx.save();
+      ctx.fillStyle = '#fff';
+      ctx.font = 'bold 12px IBM Plex Mono';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(pct, x, y);
+      ctx.restore();
+    });
+  }
+};
+
+async function muatData(){
+  try{
+    const res = await fetch('data.json', {cache:'no-store'});
+    if(!res.ok) throw new Error('Gagal memuat data.json');
+    const data = await res.json();
+    render(data);
+  } catch(err){
+    document.getElementById('status').innerHTML =
+      'Data belum tersedia. Jalankan workflow GitHub Actions untuk membuat <code>data.json</code> pertama kali.<br><br>' +
+      '<span style="color:#C1442D">' + err.message + '</span>';
+  }
 }
 
-function pct(terisi, digunakan) {
-  const d = parseInt(digunakan) || 0;
-  const t = parseInt(terisi) || 0;
-  if (d === 0) return 0;
-  if (t >= d) return 100;
-  return Math.floor((t / d) * 100); // floor, bukan round — biar 99.6% tidak jadi "100% PENUH"
-}
-function tagClass(p) {
-  if (p===100) return 'tag-full';
-  if (p>=50)   return 'tag-high';
-  if (p>0)     return 'tag-mid';
-  return 'tag-zero';
-}
-function barClass(p) {
-  if (p===100) return 'full';
-  if (p>=50)   return 'high';
-  if (p>0)     return 'mid';
-  return 'low';
-}
-function tagLabel(p) {
-  if (p===100) return 'PENUH';
-  if (p>=50)   return 'BAIK';
-  if (p>0)     return 'PROSES';
-  return 'KOSONG';
-}
-function fmt(n) { return parseInt(n).toLocaleString('id-ID'); }
-
-function setFilter(btn, f) {
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  currentFilter = f;
-  renderTable();
+function formatTanggal(iso){
+  if(!iso) return '–';
+  return new Date(iso).toLocaleDateString('id-ID', {day:'2-digit', month:'short', year:'numeric'});
 }
 
-function matchFilter(row) {
-  const p = pct(row.ssd_terisi, row.ssd_digunakan);
-  if (currentFilter==='full') return p===100;
-  if (currentFilter==='high') return p>=50 && p<100;
-  if (currentFilter==='low')  return p>0 && p<50;
-  if (currentFilter==='zero') return p===0;
-  return true;
+function render(data){
+  document.getElementById('status').classList.add('hidden');
+  document.getElementById('konten').classList.remove('hidden');
+
+  document.getElementById('meta-update').textContent = formatTanggal(data.last_updated);
+  document.getElementById('meta-periode').textContent =
+    (data.periode.mulai ? formatTanggal(data.periode.mulai) : '–') + ' s.d. ' +
+    (data.periode.selesai ? formatTanggal(data.periode.selesai) : '–');
+
+  document.getElementById('stempel-rating').textContent = data.rata_rata_bintang.toFixed(2);
+
+  const total = data.total_review;
+  const pos   = data.distribusi_sentimen.Positif || 0;
+  const neg   = data.distribusi_sentimen.Negatif || 0;
+  const respPct = total ? Math.round((data.responsivitas_developer.Ya / total) * 100) : 0;
+
+  document.getElementById('ring-total').textContent    = total.toLocaleString('id-ID');
+  document.getElementById('ring-positif').textContent  = total ? Math.round(pos/total*100)+'%' : '0%';
+  document.getElementById('ring-negatif').textContent  = total ? Math.round(neg/total*100)+'%' : '0%';
+  document.getElementById('ring-respons').textContent  = respPct + '%';
+
+  // ── Chart 1: Distribusi Bintang ──
+  new Chart(document.getElementById('chart-bintang'), {
+    type: 'bar',
+    data: {
+      labels: ['1★','2★','3★','4★','5★'],
+      datasets: [{
+        data: [1,2,3,4,5].map(i => data.distribusi_bintang[i] || 0),
+        backgroundColor: PALET.bintang, borderRadius: 3, maxBarThickness: 46
+      }]
+    },
+    options: {
+      plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: true, grid: { color: '#EFE6D2' } }, x: { grid: { display: false } } }
+    },
+    plugins: [valBarPlugin]
+  });
+
+  // ── Chart 2: Sentimen ──
+  const sent = data.distribusi_sentimen;
+  new Chart(document.getElementById('chart-sentimen'), {
+    type: 'doughnut',
+    data: {
+      labels: Object.keys(sent),
+      datasets: [{
+        data: Object.values(sent),
+        backgroundColor: Object.keys(sent).map(k => k==='Positif' ? PALET.sawah : k==='Negatif' ? PALET.stamp : PALET.kuningan),
+        borderColor: '#FFFDF8', borderWidth: 3
+      }]
+    },
+    options: {
+      cutout: '62%',
+      plugins: {
+        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } },
+        tooltip: { callbacks: { label: function(ctx){
+          const t = ctx.dataset.data.reduce((a,b) => a+b, 0);
+          const pct = (ctx.parsed / t * 100).toFixed(1);
+          return ` ${ctx.label}: ${ctx.parsed} (${pct}%)`;
+        }}}
+      }
+    },
+    plugins: [doughnutLabelPlugin]
+  });
+
+  // ── Chart 3: Tren per Tahun ──
+  const tren = data.tren_per_tahun;
+  new Chart(document.getElementById('chart-tren'), {
+    type: 'line',
+    data: {
+      labels: tren.map(t => t.tahun),
+      datasets: [
+        { label:'Positif', data: tren.map(t=>t.Positif), borderColor: PALET.sawah,    backgroundColor: PALET.sawah,    tension: 0.3 },
+        { label:'Netral',  data: tren.map(t=>t.Netral),  borderColor: PALET.kuningan, backgroundColor: PALET.kuningan, tension: 0.3 },
+        { label:'Negatif', data: tren.map(t=>t.Negatif), borderColor: PALET.stamp,    backgroundColor: PALET.stamp,    tension: 0.3 }
+      ]
+    },
+    options: {
+      plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } } },
+      scales: { y: { beginAtZero: true, grid: { color: '#EFE6D2' } }, x: { grid: { display: false } } }
+    }
+  });
+
+  // ── Chart 4: Rata-rata Bintang per Tahun ──
+  const avgTahun   = data.avg_bintang_per_tahun;
+  const tahunKeys  = Object.keys(avgTahun).sort();
+  new Chart(document.getElementById('chart-avg-tahun'), {
+    type: 'bar',
+    data: {
+      labels: tahunKeys,
+      datasets: [{ data: tahunKeys.map(t => avgTahun[t]), backgroundColor: PALET.inkSoft, borderRadius: 3, maxBarThickness: 40 }]
+    },
+    options: {
+      plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: true, max: 5, grid: { color: '#EFE6D2' } }, x: { grid: { display: false } } }
+    },
+    plugins: [valBarPlugin]
+  });
+
+  // ── Kategori list ──
+  const katList  = document.getElementById('kat-list');
+  const kategori = Object.entries(data.frekuensi_kategori).slice(0, 9);
+  const maxKat   = Math.max(...kategori.map(([,v]) => v));
+  katList.innerHTML = kategori.map(([nama, jumlah]) => `
+    <div class="kat-row">
+      <span class="nama">${nama}</span>
+      <span class="bar-bg"><span class="bar-fg" style="width:${(jumlah/maxKat*100).toFixed(0)}%"></span></span>
+      <span class="jumlah">${jumlah}</span>
+    </div>`).join('');
+
+  // ── Chart 5: Responsivitas Developer ──
+  const resp = data.responsivitas_developer;
+  new Chart(document.getElementById('chart-respons'), {
+    type: 'bar',
+    data: {
+      labels: ['Tidak Dibalas','Dibalas'],
+      datasets: [{ data: [resp.Tidak, resp.Ya], backgroundColor: ['#C9BBA0', PALET.inkSoft], borderRadius: 3, maxBarThickness: 60 }]
+    },
+    options: {
+      indexAxis: 'y',
+      plugins: { legend: { display: false } },
+      scales: { x: { beginAtZero: true, grid: { color: '#EFE6D2' } }, y: { grid: { display: false } } }
+    },
+    plugins: [valBarPlugin]
+  });
+
+  // ── Sorotan Ulasan ──
+  const revs   = data.sample_reviews;
+  const topPos = [...revs].filter(r => r.bintang >= 4).sort((a,b) => (b.likes||0)-(a.likes||0))[0];
+  const topNeg = [...revs].filter(r => r.bintang <= 2).sort((a,b) => (b.likes||0)-(a.likes||0))[0];
+  const hlGrid = document.getElementById('highlight-grid');
+  const hlKartu = (r, jenis) => !r ? '' : `
+    <div class="highlight-kartu">
+      <div class="label-hl">
+        <span class="dot ${jenis}"></span>
+        ${jenis==='pos' ? 'Apresiasi Terpilih' : 'Keluhan Terpilih'} · ${r.likes||0} suka
+      </div>
+      <div class="isi">"${r.isi || r.content || ''}"</div>
+      <div class="meta">${r.nama||'–'} · ${'★'.repeat(r.bintang)}${'☆'.repeat(5-r.bintang)} · ${formatTanggal(r.tanggal)}</div>
+    </div>`;
+  hlGrid.innerHTML = hlKartu(topPos,'pos') + hlKartu(topNeg,'neg');
+
+  // ── Tabel ulasan ──
+  semuaReview = revs;
+  tampilSampai = 20;
+  renderTabel();
+
+  ['filter-sentimen','filter-bintang','filter-cari'].forEach(id => {
+    document.getElementById(id).addEventListener('input', () => { tampilSampai = 20; renderTabel(); });
+  });
 }
 
-function renderTable() {
-  const q = document.getElementById('search').value.toLowerCase();
-  const sort = document.getElementById('sort-sel').value;
-  let rows = allData
-    .filter(r => r.namaurusan.toLowerCase().includes(q) || r.kodeurusan.includes(q))
-    .filter(matchFilter);
+function getFiltered(){
+  const sent    = document.getElementById('filter-sentimen').value;
+  const bintang = document.getElementById('filter-bintang').value;
+  const cari    = document.getElementById('filter-cari').value.toLowerCase().trim();
+  return semuaReview.filter(r => {
+    const kelas = r.bintang >= 4 ? 'positif' : r.bintang === 3 ? 'netral' : 'negatif';
+    if(sent    && kelas    !== sent)         return false;
+    if(bintang && r.bintang != bintang)      return false;
+    if(cari    && !(r.isi||r.content||'').toLowerCase().includes(cari)) return false;
+    return true;
+  });
+}
 
-  if (sort==='pct-desc') rows.sort((a,b)=>pct(b.ssd_terisi,b.ssd_digunakan)-pct(a.ssd_terisi,a.ssd_digunakan));
-  else if (sort==='pct-asc') rows.sort((a,b)=>pct(a.ssd_terisi,a.ssd_digunakan)-pct(b.ssd_terisi,b.ssd_digunakan));
-  else if (sort==='jml-desc') rows.sort((a,b)=>parseInt(b.ssd_jml)-parseInt(a.ssd_jml));
-  else rows.sort((a,b)=>a.kodeurusan.localeCompare(b.kodeurusan));
+function renderTabel(){
+  const filtered = getFiltered();
+  const tampil   = filtered.slice(0, tampilSampai);
+  const tbody    = document.getElementById('tabel-review');
+  const btnLagi  = document.getElementById('btn-muat-lagi');
 
-  currentRows = rows;
+  document.getElementById('jumlah-tampil').textContent =
+    filtered.length === semuaReview.length
+      ? `${filtered.length} ulasan`
+      : `${filtered.length} dari ${semuaReview.length} ulasan`;
 
-  const tbody = document.getElementById('tbody');
-  if (!rows.length) {
-    tbody.innerHTML='<tr><td colspan="11"><div class="empty-state">Tidak ada data yang cocok.</div></td></tr>';
+  if(tampil.length === 0){
+    tbody.innerHTML = `<tr><td colspan="6" class="tabel-kosong">Tidak ada ulasan yang sesuai filter.</td></tr>`;
+    btnLagi.classList.add('hidden');
     return;
   }
-  tbody.innerHTML = rows.map((r, i) => {
-    const p = pct(r.ssd_terisi, r.ssd_digunakan);
-    const short = r.namaurusan.replace('URUSAN PEMERINTAHAN BIDANG ','').replace('URUSAN PEMERINTAHAN ','');
-    const note = multiDinasNote(r.kodeurusan, p);
-    const noteHtml = note ? `<span style="color:var(--muted);font-style:italic;font-size:9.5px;margin-top:2px">${note}</span>` : '';
+
+  const cari = document.getElementById('filter-cari').value.toLowerCase().trim();
+  tbody.innerHTML = tampil.map(r => {
+    const kelas    = r.bintang >= 4 ? 'positif' : r.bintang === 3 ? 'netral' : 'negatif';
+    const isiRaw   = r.isi || r.content || '';
+    let   isi      = isiRaw.slice(0, 160) + (isiRaw.length > 160 ? '…' : '');
+    if(cari) isi   = isi.replace(new RegExp(cari,'gi'), m => `<mark style="background:#FFF176;border-radius:2px">${m}</mark>`);
+    const likesKls = (r.likes||0) >= 5 ? 'tinggi' : '';
     return `<tr>
-      <td class="td-num total">${i + 1}</td>
-      <td class="td-kode">${r.kodeurusan}</td>
-      <td class="td-nama">${short}<span style="color:var(--emas-deep);font-weight:600;margin-top:2px">${dinasName(r.kodeurusan)}</span>${noteHtml}</td>
-      <td class="td-num total">${fmt(r.ssd_jml)}</td>
-      <td class="td-num">${fmt(r.ssd_digunakan)}</td>
-      <td class="td-num" style="color:#1E9E46;font-weight:600">${fmt(r.ssd_terisi)}</td>
-      <td class="td-num" style="color:var(--emas-deep)">${fmt(r.ssd_tidakterisi)}</td>
-      <td class="td-num">${fmt(r.ssd_ver_walidata)}</td>
-      <td class="td-num">${fmt(r.ssd_ver_pembina)}</td>
-      <td class="td-num">${fmt(r.ssd_final)}</td>
-      <td class="td-bar-cell">
-        <div class="mini-bar-wrap"><div class="mini-bar ${barClass(p)}" style="width:${p}%"></div></div>
-        <span class="mini-pct">${p}%</span><span class="tag ${tagClass(p)}">${tagLabel(p)}</span>
-      </td>
+      <td style="white-space:nowrap;font-size:12.5px">${r.nama || '–'}</td>
+      <td class="isi-review">${isi}</td>
+      <td><span class="bintang-pill ${kelas}">${'★'.repeat(r.bintang)}${'☆'.repeat(5-r.bintang)}</span></td>
+      <td><span class="likes-badge ${likesKls}">👍 ${r.likes||0}</span></td>
+      <td style="white-space:nowrap;font-size:12px">${formatTanggal(r.tanggal)}</td>
+      <td style="font-size:12px">${r.versi || '–'}</td>
     </tr>`;
   }).join('');
+
+  btnLagi.classList.toggle('hidden', tampilSampai >= filtered.length);
+  btnLagi.textContent = `Tampilkan lebih banyak (${filtered.length - tampilSampai} lagi) ▾`;
 }
 
-function renderStats() {
-  const tot_urusan    = allData.length;
-  const tot_induk     = allData.reduce((s,r)=>s+parseInt(r.ssd_jml),0);
-  const tot_digunakan = allData.reduce((s,r)=>s+parseInt(r.ssd_digunakan),0);
-  const tot_terisi    = allData.reduce((s,r)=>s+parseInt(r.ssd_terisi),0);
-  const tot_belum     = allData.reduce((s,r)=>s+parseInt(r.ssd_tidakterisi),0);
-  const tot_disabled  = allData.reduce((s,r)=>s+parseInt(r.ssd_disabled),0);
-  document.getElementById('s-urusan').textContent    = tot_urusan;
-  document.getElementById('s-induk').textContent     = fmt(tot_induk);
-  document.getElementById('s-digunakan').textContent = fmt(tot_digunakan);
-  document.getElementById('s-terisi').textContent    = fmt(tot_terisi);
-  document.getElementById('s-belum').textContent     = fmt(tot_belum);
-  document.getElementById('s-disabled').textContent  = fmt(tot_disabled);
-  const p = tot_digunakan>0 ? Math.round((tot_terisi/tot_digunakan)*100) : 0;
-  document.getElementById('overall-pct').textContent = p+'%';
-  setTimeout(()=>{ document.getElementById('overall-bar').style.width = p+'%'; }, 300);
+function muatLagi(){ tampilSampai += 20; renderTabel(); }
+
+function resetFilter(){
+  document.getElementById('filter-sentimen').value = '';
+  document.getElementById('filter-bintang').value  = '';
+  document.getElementById('filter-cari').value     = '';
+  tampilSampai = 20;
+  renderTabel();
 }
 
-function computeOpdGroups() {
-  // Kelompokkan urusan berdasarkan tiap OPD (bisa >1 OPD per urusan), lalu jumlahkan data tiap grup.
-  // 1 OPD yang menangani beberapa urusan (mis. Diskominfo: Kominfo, Statistik, Persandian)
-  // dihitung sebagai 1 entitas. Urusan yang ditangani >1 OPD (mis. Trantibum: Satpol PP + BPBD)
-  // datanya ikut dihitung ke masing-masing OPD tsb (karena sumber data tidak dipecah per-OPD,
-  // ini best-effort, bukan pemisahan pasti).
-  const groups = {};
-  allData.forEach(r => {
-    dinasList(r.kodeurusan).forEach(opd => {
-      if (!groups[opd]) groups[opd] = { terisi: 0, digunakan: 0, kodes: [] };
-      groups[opd].terisi    += parseInt(r.ssd_terisi) || 0;
-      groups[opd].digunakan += parseInt(r.ssd_digunakan) || 0;
-      groups[opd].kodes.push(r.kodeurusan);
-    });
-  });
-  return groups;
-}
+muatData();
 
-function updateFilterCounts() {
-  const groups = computeOpdGroups();
-  const c = { full: 0, high: 0, low: 0, zero: 0 };
-  const names = Object.keys(groups);
-  names.forEach(opd => {
-    const g = groups[opd];
-    const p = pct(g.terisi, g.digunakan);
-    if (p===100) c.full++;
-    else if (p>=50) c.high++;
-    else if (p>0) c.low++;
-    else c.zero++;
-  });
-  const allBtn = document.getElementById('filter-all');
-  allBtn.textContent = `Semua (${names.length} OPD)`;
-  allBtn.title = `${names.length} OPD unik menangani ${allData.length} urusan`;
-  document.getElementById('filter-full').textContent = `100% (${c.full})`;
-  document.getElementById('filter-high').textContent = `≥50% (${c.high})`;
-  document.getElementById('filter-low').textContent  = `<50% (${c.low})`;
-  document.getElementById('filter-zero').textContent = `0% (${c.zero})`;
-  ['filter-full','filter-high','filter-low','filter-zero'].forEach(id => {
-    document.getElementById(id).title = 'Dihitung per OPD (gabungan semua urusan yang ditangani OPD tersebut), bukan per baris urusan';
-  });
-}
-
-async function loadData(tahun) {
-  tahun = tahun || '2025';
-  const file = FILE_MAP[tahun] || FILE_MAP['2025'];
-  document.getElementById('live-label').textContent = 'memuat...';
-  try {
-    const res = await fetch(file + '?_=' + Date.now());
-    const json = await res.json();
-    allData = (json.data || []).filter(r => !EXCLUDE_KODE.includes(r.kodeurusan));
-
-    const meta = json.meta || {};
-    let updated = '—';
-    if (meta.last_updated && meta.last_updated !== '—') {
-      try {
-        const raw = meta.last_updated.includes('+') || meta.last_updated.endsWith('Z')
-          ? meta.last_updated : meta.last_updated + '+08:00';
-        updated = new Date(raw).toLocaleString('id-ID', {
-          timeZone:'Asia/Makassar', day:'2-digit', month:'long',
-          year:'numeric', hour:'2-digit', minute:'2-digit'
-        });
-      } catch(e) { updated = meta.last_updated; }
-    }
-
-    document.getElementById('live-label').textContent  = 'data tersedia';
-    document.getElementById('tahun-hero').textContent  = tahun;
-    document.getElementById('last-updated').textContent= updated!=='—' ? 'Per: '+updated+' WITA' : '';
-    document.getElementById('footer-updated').textContent = updated!=='—' ? 'Data per: '+updated+' WITA' : '';
-
-    renderStats();
-    updateFilterCounts();
-    renderTable();
-  } catch(e) {
-    document.getElementById('live-label').textContent = 'gagal memuat';
-    document.getElementById('tbody').innerHTML =
-      '<tr><td colspan="11"><div class="empty-state">⚠️ Gagal memuat data. Coba muat ulang halaman.</div></td></tr>';
-  }
-}
-
-/* ===================== EXPORT ===================== */
-
-function toggleExportMenu(e) {
-  e.stopPropagation();
-  const menu = document.getElementById('export-menu');
-  if (menu.classList.contains('open')) {
-    menu.classList.remove('open');
-    return;
-  }
-  const btn = document.getElementById('export-toggle');
-  const rect = btn.getBoundingClientRect();
-  const menuWidth = 190;
-  const margin = 10;
-  let left = rect.right - menuWidth;
-  if (left < margin) left = margin;
-  if (left + menuWidth > window.innerWidth - margin) left = window.innerWidth - menuWidth - margin;
-  let top = rect.bottom + 6;
-  menu.style.left = left + 'px';
-  menu.style.top = top + 'px';
-  menu.classList.add('open');
-}
-document.addEventListener('click', () => {
-  document.getElementById('export-menu').classList.remove('open');
-});
-window.addEventListener('scroll', () => {
-  document.getElementById('export-menu').classList.remove('open');
-}, true);
-window.addEventListener('resize', () => {
-  document.getElementById('export-menu').classList.remove('open');
-});
-
-// Data hasil export mengikuti filter/pencarian/urutan yang sedang aktif di layar.
-function getExportData() {
-  return currentRows.map((r, i) => {
-    const p = pct(r.ssd_terisi, r.ssd_digunakan);
-    return {
-      'No': i + 1,
-      'Kode': r.kodeurusan,
-      'Nama Urusan': r.namaurusan,
-      'Dinas Penanggung Jawab': dinasName(r.kodeurusan),
-      'Data Induk': parseInt(r.ssd_jml),
-      'Digunakan': parseInt(r.ssd_digunakan),
-      'Terisi': parseInt(r.ssd_terisi),
-      'Belum Terisi': parseInt(r.ssd_tidakterisi),
-      'Ver. Walidata': parseInt(r.ssd_ver_walidata),
-      'Ver. Pembina': parseInt(r.ssd_ver_pembina),
-      'Final': parseInt(r.ssd_final),
-      '% Keterisian': p
-    };
-  });
-}
-
-function exportFilename(ext) {
-  const now = new Date();
-  const stamp = now.toISOString().slice(0,10);
-  return `rekap-dssd-berau-${currentTahun}-${stamp}.${ext}`;
-}
-
-function exportExcel() {
-  document.getElementById('export-menu').classList.remove('open');
-  const data = getExportData();
-  if (!data.length) { alert('Tidak ada data untuk diexport.'); return; }
-  const ws = XLSX.utils.json_to_sheet(data);
-  ws['!cols'] = [
-    {wch:5},{wch:8},{wch:45},{wch:35},{wch:11},{wch:11},{wch:9},{wch:12},{wch:13},{wch:13},{wch:8},{wch:13}
-  ];
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, `DSSD ${currentTahun}`);
-  XLSX.writeFile(wb, exportFilename('xlsx'));
-}
-
-function exportCSV() {
-  document.getElementById('export-menu').classList.remove('open');
-  const data = getExportData();
-  if (!data.length) { alert('Tidak ada data untuk diexport.'); return; }
-  const headers = Object.keys(data[0]);
-  const escapeCsv = (v) => {
-    const s = String(v);
-    return /[",\n;]/.test(s) ? '"' + s.replace(/"/g,'""') + '"' : s;
-  };
-  const lines = [
-    headers.join(';'),
-    ...data.map(row => headers.map(h => escapeCsv(row[h])).join(';'))
-  ];
-  const csvContent = '\uFEFF' + lines.join('\r\n'); // BOM biar Excel baca UTF-8 dgn benar
-  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = exportFilename('csv');
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-}
-
-function exportPDF() {
-  document.getElementById('export-menu').classList.remove('open');
-  const data = getExportData();
-  if (!data.length) { alert('Tidak ada data untuk diexport.'); return; }
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF({ orientation: 'landscape', unit: 'pt', format: 'a4' });
-
-  doc.setFontSize(13);
-  doc.setTextColor(19, 77, 34);
-  doc.text('Rekap Tahapan DSSD e-Walidata — KAB. BERAU', 40, 35);
-  doc.setFontSize(9);
-  doc.setTextColor(100);
-  doc.text(`Tahun: ${currentTahun}  ·  Diexport: ${new Date().toLocaleString('id-ID')}`, 40, 50);
-
-  const headers = Object.keys(data[0]);
-  const body = data.map(row => headers.map(h => row[h]));
-
-  doc.autoTable({
-    head: [headers],
-    body: body,
-    startY: 65,
-    styles: { font: 'helvetica', fontSize: 7.5, cellPadding: 4 },
-    headStyles: { fillColor: [19, 77, 34], textColor: [240, 192, 64], fontStyle: 'bold' },
-    alternateRowStyles: { fillColor: [245, 247, 244] },
-    columnStyles: {
-      0: { cellWidth: 25 },
-      1: { cellWidth: 40 },
-      2: { cellWidth: 150 },
-      3: { cellWidth: 130 }
-    },
-    margin: { left: 40, right: 40 }
-  });
-
-  doc.save(exportFilename('pdf'));
-}
-
-loadData('2025');
 </script>
 </body>
 </html>
-
