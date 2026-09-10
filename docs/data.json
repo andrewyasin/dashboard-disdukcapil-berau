@@ -1,28 +1,28 @@
 {
-  "last_updated": "2026-09-10T17:59:00.158778+08:00",
+  "last_updated": "2026-09-10T22:19:18.109308+08:00",
   "app_info": {
     "title": "DISDUKCAPIL BERAU",
     "developer": "DISDUKCAPIL BERAU",
     "score": 4.06,
-    "ratings": 815,
+    "ratings": 816,
     "version": "3.0.3",
     "installs": "100.000+"
   },
   "periode": {
     "mulai": "2019-11-11",
-    "selesai": "2026-07-17"
+    "selesai": "2026-09-09"
   },
-  "total_review": 470,
+  "total_review": 471,
   "rata_rata_bintang": 3.87,
   "distribusi_bintang": {
     "1": 90,
     "2": 26,
     "3": 25,
     "4": 42,
-    "5": 287
+    "5": 288
   },
   "distribusi_sentimen": {
-    "Positif": 329,
+    "Positif": 330,
     "Negatif": 116,
     "Netral": 25
   },
@@ -71,7 +71,7 @@
     },
     {
       "tahun": 2026,
-      "Positif": 8,
+      "Positif": 9,
       "Netral": 0,
       "Negatif": 3
     }
@@ -84,7 +84,7 @@
     "2023": 3.67,
     "2024": 2.95,
     "2025": 3.6,
-    "2026": 3.82
+    "2026": 3.92
   },
   "frekuensi_kategori": {
     "Pujian Umum": 219,
@@ -94,7 +94,7 @@
     "Pelayanan": 70,
     "Login / Akun": 64,
     "Error / Bug": 57,
-    "Dokumen": 36,
+    "Dokumen": 37,
     "Update / Versi": 33,
     "KTP / e-KTP": 26,
     "Kartu Keluarga": 24,
@@ -102,9 +102,17 @@
   },
   "responsivitas_developer": {
     "Ya": 61,
-    "Tidak": 409
+    "Tidak": 410
   },
   "sample_reviews": [
+    {
+      "nama": "Yulianus Nong",
+      "isi": "Terimakasih.. Segala urusan Dokumennya Lancar Sukses Terus DISDUKCAPIL Berau",
+      "bintang": 5,
+      "tanggal": "2026-09-09 13:59:59",
+      "likes": 0,
+      "versi": "3.0.3"
+    },
     {
       "nama": "duck bebek",
       "isi": "pelayanan cepat, memudahkan tanpa harus mondar mandir ke kantor",
@@ -254,14 +262,6 @@
       "isi": "sangat membantu saya terima kasih *****",
       "bintang": 5,
       "tanggal": "2025-06-03 11:20:11",
-      "likes": 0,
-      "versi": "3.0.2"
-    },
-    {
-      "nama": "Guna",
-      "isi": "MANTAP,GAK BIKIN CAPE ANTRI",
-      "bintang": 4,
-      "tanggal": "2025-05-26 03:32:16",
       "likes": 0,
       "versi": "3.0.2"
     }
