@@ -6,6 +6,7 @@ Output (semua di folder docs/):
   - data.json            : agregat untuk dashboard web (skema TIDAK berubah)
   - reviews.csv          : SEMUA ulasan, satu baris per ulasan (untuk Power BI)
   - review_kategori.csv  : tabel jembatan ulasan -> kategori (satu ulasan bisa banyak kategori)
+  - kategori_lengkap.csv : sama, tetapi membawa atribut ulasan (untuk Looker Studio)
 
 Catatan privasi: nama pengguna TIDAK diekspor ke CSV.
 reviews.csv bersifat akumulatif: ulasan yang sudah pernah terambil tetap disimpan
@@ -26,6 +27,7 @@ OUT_DIR = "docs"
 OUTPUT_PATH = f"{OUT_DIR}/data.json"
 REVIEWS_CSV = f"{OUT_DIR}/reviews.csv"
 KATEGORI_CSV = f"{OUT_DIR}/review_kategori.csv"
+KATEGORI_LENGKAP_CSV = f"{OUT_DIR}/kategori_lengkap.csv"
 MAX_REVIEWS = 1000
 WITA = timezone(timedelta(hours=8))
 
@@ -150,15 +152,55 @@ def bangun_tabel_ulasan(df: pd.DataFrame) -> pd.DataFrame:
     return out
 
 
+def lengkapi_turunan(df: pd.DataFrame) -> pd.DataFrame:
+    """Hitung ulang SEMUA kolom turunan dari kolom dasar (isi, bintang, tanggal, ada_balasan).
+    Dipanggil setelah penggabungan arsip, sehingga ulasan lama otomatis mengikuti kamus
+    kategori terbaru dan kolom baru selalu terisi."""
+    df = df.copy()
+    df["tanggal"] = pd.to_datetime(df["tanggal"], errors="coerce")
+    df["tanggal_balasan"] = pd.to_datetime(df["tanggal_balasan"], errors="coerce")
+    df["ada_balasan"] = df["ada_balasan"].astype(bool)
+    df["sentimen"] = df["bintang"].astype(int).apply(label_sentimen)
+    df["kategori"] = df["isi"].apply(kategorisasi)
+    df["jumlah_kata"] = df["isi"].fillna("").str.split().str.len()
+    df["tahun"] = df["tanggal"].dt.year
+    # Kolom ramah Looker Studio: tanggal murni, awal bulan, dan penanda numerik 1/0
+    df["tanggal_date"] = df["tanggal"].dt.strftime("%Y-%m-%d")
+    df["bulan"] = df["tanggal"].dt.strftime("%Y-%m-01")
+    df["status_balasan"] = df["ada_balasan"].map({True: "Dibalas", False: "Belum dibalas"})
+    df["dibalas"] = df["ada_balasan"].astype(int)
+    df["is_positif"] = (df["sentimen"] == "Positif").astype(int)
+    df["is_negatif"] = (df["sentimen"] == "Negatif").astype(int)
+    df["skor_sentimen"] = df["is_positif"] - df["is_negatif"]  # rata-ratanya = net sentiment
+    df["negatif_dibalas"] = ((df["sentimen"] == "Negatif") & df["ada_balasan"]).astype(int)
+    kolom = [
+        "review_id", "tanggal", "tanggal_date", "bulan", "tahun", "bintang", "sentimen",
+        "is_positif", "is_negatif", "skor_sentimen", "kategori", "isi", "jumlah_kata",
+        "likes", "versi", "ada_balasan", "status_balasan", "dibalas", "negatif_dibalas",
+        "tanggal_balasan", "hari_balas", "isi_balasan",
+    ]
+    return df[kolom]
+
+
+def tabel_kategori_lengkap(df: pd.DataFrame) -> pd.DataFrame:
+    """Satu baris per (ulasan, kategori), lengkap dengan atribut ulasan.
+    Dipakai sebagai sumber data tersendiri di Looker Studio (tanpa perlu relasi/blend)."""
+    out = df[["review_id", "kategori", "tanggal_date", "bulan", "tahun", "bintang",
+              "sentimen", "is_positif", "is_negatif", "dibalas"]].copy()
+    out["kategori"] = out["kategori"].str.split(", ")
+    return out.explode("kategori").reset_index(drop=True)
+
+
 def gabung_dengan_arsip(baru: pd.DataFrame) -> pd.DataFrame:
     """Gabungkan dengan reviews.csv lama agar ulasan yang pernah terambil tidak hilang."""
     if os.path.exists(REVIEWS_CSV):
-        lama = pd.read_csv(REVIEWS_CSV, parse_dates=["tanggal", "tanggal_balasan"])
-        lama["ada_balasan"] = lama["ada_balasan"].astype(bool)
+        lama = pd.read_csv(REVIEWS_CSV, encoding="utf-8-sig")  # tahan BOM maupun tanpa BOM
+        lama = lama[[c for c in baru.columns if c in lama.columns]]  # hanya kolom dasar yang sama
         gabung = pd.concat([lama, baru], ignore_index=True)
         gabung = gabung.drop_duplicates(subset=["review_id"], keep="last")  # data terbaru menang
     else:
         gabung = baru
+    gabung = lengkapi_turunan(gabung)
     return gabung.sort_values("tanggal", ascending=False).reset_index(drop=True)
 
 
@@ -185,13 +227,14 @@ def main() -> None:
     total_n = len(df)
     print(f"Data bersih (akumulatif): {total_n} review")
 
-    df.to_csv(REVIEWS_CSV, index=False, encoding="utf-8-sig")  # utf-8-sig: aman dibuka di Excel/Power BI
+    df.to_csv(REVIEWS_CSV, index=False, encoding="utf-8")  # UTF-8 polos tanpa BOM: aman untuk Google Sheets/Looker Studio
     jembatan = (
         df[["review_id", "kategori"]]
         .assign(kategori=lambda d: d["kategori"].str.split(", "))
         .explode("kategori")
     )
-    jembatan.to_csv(KATEGORI_CSV, index=False, encoding="utf-8-sig")
+    jembatan.to_csv(KATEGORI_CSV, index=False, encoding="utf-8")
+    tabel_kategori_lengkap(df).to_csv(KATEGORI_LENGKAP_CSV, index=False, encoding="utf-8")
 
     # ── Agregat untuk data.json (skema sama seperti sebelumnya) ───────────
     distribusi_bintang = (
@@ -254,7 +297,7 @@ def main() -> None:
     with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
         json.dump(output, f, ensure_ascii=False, indent=2, allow_nan=False)
 
-    print(f"Selesai. Ditulis: {OUTPUT_PATH}, {REVIEWS_CSV}, {KATEGORI_CSV}")
+    print(f"Selesai. Ditulis: {OUTPUT_PATH}, {REVIEWS_CSV}, {KATEGORI_CSV}, {KATEGORI_LENGKAP_CSV}")
 
 
 if __name__ == "__main__":
