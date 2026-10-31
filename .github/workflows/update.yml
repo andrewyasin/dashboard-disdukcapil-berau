@@ -1,10 +1,7 @@
-name: Update Dashboard Data
-
+name: Scrape ulasan harian
 on:
   schedule:
-    # Setiap hari pukul 01:00 WITA (17:00 UTC hari sebelumnya)
-    # - cron: "0 17 * * *"
-    - cron: '*/30 * * * *' 
+    - cron: "0 22 * * *"      # 22:00 UTC = 06:00 WITA
   workflow_dispatch: {}   # bisa dijalankan manual dari tab Actions
   push:
     branches: [main]
@@ -32,7 +29,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: "3.12"
 
       - name: Install dependencies
         run: pip install -r scripts/requirements.txt
