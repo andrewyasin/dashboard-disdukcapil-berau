@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-10-31T13:25:42.682507+08:00",
+  "last_updated": "2026-10-31T14:18:51.195629+08:00",
   "app_info": {
     "title": "DISDUKCAPIL BERAU",
     "developer": "DISDUKCAPIL BERAU",
@@ -87,18 +87,19 @@
     "2026": 3.92
   },
   "frekuensi_kategori": {
-    "Pujian Umum": 219,
-    "Kemudahan Aplikasi": 96,
-    "Kecepatan Proses": 88,
-    "Lainnya": 85,
-    "Pelayanan": 70,
-    "Login / Akun": 64,
-    "Error / Bug": 57,
+    "Pujian Umum": 207,
+    "Lainnya": 94,
+    "Kemudahan Aplikasi": 89,
+    "Kecepatan Proses": 75,
+    "Pelayanan": 68,
+    "Error / Bug": 54,
+    "Login / Akun": 43,
     "Dokumen": 37,
     "Update / Versi": 33,
-    "KTP / e-KTP": 26,
-    "Kartu Keluarga": 24,
-    "Akta Kelahiran": 8
+    "KTP / e-KTP": 24,
+    "Kartu Keluarga": 20,
+    "Akta Kelahiran": 10,
+    "Keluhan Umum": 6
   },
   "responsivitas_developer": {
     "Ya": 61,
@@ -106,7 +107,6 @@
   },
   "sample_reviews": [
     {
-      "nama": "Yulianus Nong",
       "isi": "Terimakasih.. Segala urusan Dokumennya Lancar Sukses Terus DISDUKCAPIL Berau",
       "bintang": 5,
       "tanggal": "2026-09-09 13:59:59",
@@ -114,7 +114,6 @@
       "versi": "3.0.3"
     },
     {
-      "nama": "duck bebek",
       "isi": "pelayanan cepat, memudahkan tanpa harus mondar mandir ke kantor",
       "bintang": 5,
       "tanggal": "2026-07-17 00:24:58",
@@ -122,7 +121,6 @@
       "versi": "3.0.3"
     },
     {
-      "nama": "ZULMISRIANTO",
       "isi": "aplikasi sangat bermanfaat untuk mengetahui identitas kependudukan",
       "bintang": 5,
       "tanggal": "2026-07-12 18:15:21",
@@ -130,7 +128,6 @@
       "versi": "3.0.3"
     },
     {
-      "nama": "rian mandalika",
       "isi": "aplikasi jelek gak bisa di pakai,.",
       "bintang": 1,
       "tanggal": "2026-07-01 06:38:08",
@@ -138,7 +135,6 @@
       "versi": "3.0.3"
     },
     {
-      "nama": "Neng Fitri",
       "isi": "saya puas dengan pelayanan dan kecepatan peroses pembuatan nya, Capil Berau memang top.",
       "bintang": 5,
       "tanggal": "2026-06-08 06:57:27",
@@ -146,7 +142,6 @@
       "versi": "3.0.3"
     },
     {
-      "nama": "riswan 207",
       "isi": "bagus",
       "bintang": 5,
       "tanggal": "2026-05-21 05:14:45",
@@ -154,7 +149,6 @@
       "versi": "3.0.3"
     },
     {
-      "nama": "Dandi Jie",
       "isi": "KTP fisik saya hilang sementara saya berada di Sulawesi, min bantu donk",
       "bintang": 5,
       "tanggal": "2026-05-17 04:09:16",
@@ -162,7 +156,6 @@
       "versi": "3.0.3"
     },
     {
-      "nama": "Weli Yanti",
       "isi": "baik",
       "bintang": 5,
       "tanggal": "2026-03-11 02:52:59",
@@ -170,7 +163,6 @@
       "versi": "3.0.3"
     },
     {
-      "nama": "Like Boss",
       "isi": "untuk aplikasi sdh bagus, tetapi dalam pelayanan pertama saja sdh membingungkan entah itu disuruh cari dokumen 2tahun lalu, 3/4 tahun lalu jika tidak ada dokumen baru tidak akan terbit",
       "bintang": 1,
       "tanggal": "2026-03-02 02:38:21",
@@ -178,7 +170,6 @@
       "versi": "3.0.3"
     },
     {
-      "nama": "Mr Kahar",
       "isi": "kenapa sangat lama upload KTP digital",
       "bintang": 4,
       "tanggal": "2026-02-10 00:37:39",
@@ -186,7 +177,6 @@
       "versi": "3.0.3"
     },
     {
-      "nama": "Natalius Paramme",
       "isi": "aplikasi eror terus, upload dokumen gak bisa, tidak ada pemberitahuan gagal upload karna apa (kebesaran kah atau format tidak di dukung), susah untuk kaum awam",
       "bintang": 1,
       "tanggal": "2026-01-27 03:43:13",
@@ -194,7 +184,6 @@
       "versi": "3.0.3"
     },
     {
-      "nama": "Taurus Boy",
       "isi": "Pelayanan mudah,simpel dan cepat untuk warga Berau. Tetaplah selalu di pertahankan dan makin di tingkatkan 🙏",
       "bintang": 5,
       "tanggal": "2026-01-21 00:52:16",
@@ -202,7 +191,6 @@
       "versi": "3.0.3"
     },
     {
-      "nama": "Sobastianus Sibastianus",
       "isi": "The best",
       "bintang": 5,
       "tanggal": "2025-11-25 00:31:29",
@@ -210,7 +198,6 @@
       "versi": "3.0.3"
     },
     {
-      "nama": "Ahmad Suhada",
       "isi": "aplikasi boomer ya gini. pisah kk online suruh instal ini aplikasi persyaratan udah di isiiii semua . menu pilihan kelurahan cuman twrbatas dan gak tau itu dimana. ini gimana coba. pantes dukcapil isinya cuman CALOOOOO DOANG, APLIKASI SE RECEH INI AJA GA BECUS KERJAAN NYA. SESIMPLE PILIHAN KELURAHAN KECAMATAN ISINYA CUMAN 7 BIJI DOANG. payah banget",
       "bintang": 1,
       "tanggal": "2025-11-24 05:04:08",
@@ -218,7 +205,6 @@
       "versi": "3.0.3"
     },
     {
-      "nama": "rinaa risna",
       "isi": "aplikasi yg sangat membatu, hnya dari rumah, smua langsung jadi terimakasih Ats sglanya, skg sya sdah pindah kota, dan dgan berat hati sya akan uninstall, soalnya sya sdah tdak d Berau lagi sekali lagi aplikasi ini sgt membantu",
       "bintang": 5,
       "tanggal": "2025-08-14 09:14:13",
@@ -226,7 +212,6 @@
       "versi": "3.0.1"
     },
     {
-      "nama": "Adilla Putry",
       "isi": "saya sangat senang memakai aplikasi DISDUKCAPIL BERAU ini sangat membantu saya",
       "bintang": 5,
       "tanggal": "2025-07-28 01:19:43",
@@ -234,7 +219,6 @@
       "versi": "3.0.2"
     },
     {
-      "nama": "Moh Kumar",
       "isi": "mantap",
       "bintang": 5,
       "tanggal": "2025-07-17 13:53:27",
@@ -242,7 +226,6 @@
       "versi": null
     },
     {
-      "nama": "Sandika Artalios",
       "isi": "mantap mempermudah penduduk untuk mengurus persuratan KK KTP AKTE KIA DLL",
       "bintang": 5,
       "tanggal": "2025-07-10 12:06:26",
@@ -250,7 +233,6 @@
       "versi": null
     },
     {
-      "nama": "HART T",
       "isi": "ttd elektrik online yg jdi kendala krn paling lama prosesnya, di luar negeri mungkin urusan bgini 5-10 menit kelar, klo di Indonesia khususnya Berau, pagi masukkan berkas, tutup layanan belum jadi jadi. entah ngapain aja kadisnya itu ttd elektronik aja nga kelar kelar",
       "bintang": 1,
       "tanggal": "2025-07-09 07:18:11",
@@ -258,7 +240,6 @@
       "versi": "3.0.2"
     },
     {
-      "nama": "Ridwan Syam",
       "isi": "sangat membantu saya terima kasih *****",
       "bintang": 5,
       "tanggal": "2025-06-03 11:20:11",
