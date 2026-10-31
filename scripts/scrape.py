@@ -1,27 +1,38 @@
 """
-Script scraping review aplikasi Disdukcapil Berau dari Google Play Store.
+Scraping ulasan aplikasi Disdukcapil Berau dari Google Play Store.
 Dijalankan otomatis setiap hari oleh GitHub Actions.
-Output: docs/data.json (dibaca oleh dashboard di GitHub Pages)
+
+Output (semua di folder docs/):
+  - data.json            : agregat untuk dashboard web (skema TIDAK berubah)
+  - reviews.csv          : SEMUA ulasan, satu baris per ulasan (untuk Power BI)
+  - review_kategori.csv  : tabel jembatan ulasan -> kategori (satu ulasan bisa banyak kategori)
+
+Catatan privasi: nama pengguna TIDAK diekspor ke CSV.
+reviews.csv bersifat akumulatif: ulasan yang sudah pernah terambil tetap disimpan
+walaupun nanti dihapus pengguna dari Play Store.
 """
 
 import json
+import os
 import re
 from collections import Counter
 from datetime import datetime, timezone, timedelta
 
 import pandas as pd
-from google_play_scraper import Sort, app, reviews
 
 # ── KONFIGURASI ──────────────────────────────────────────────────────────────
-APP_ID = "com.disdukcapil.berau"  # Ganti jika app_id berbeda
-OUTPUT_PATH = "docs/data.json"
+APP_ID = "com.disdukcapil.berau"
+OUT_DIR = "docs"
+OUTPUT_PATH = f"{OUT_DIR}/data.json"
+REVIEWS_CSV = f"{OUT_DIR}/reviews.csv"
+KATEGORI_CSV = f"{OUT_DIR}/review_kategori.csv"
 MAX_REVIEWS = 1000
-WITA = timezone(timedelta(hours=8))  # UTC+8
+WITA = timezone(timedelta(hours=8))
 
 # ── KAMUS KATEGORI ───────────────────────────────────────────────────────────
 KATEGORI_KEYWORDS = {
     "KTP / e-KTP": ["ktp", "e-ktp", "ktp digital", "kartu tanda penduduk", "nik"],
-    "Akta Kelahiran": ["akta", "kelahiran", "lahir", "bayi", "anak"],
+    "Akta Kelahiran": ["akta", "akte", "kelahiran", "lahir", "bayi", "anak"],
     "Kartu Keluarga": ["kk", "kartu keluarga", "anggota", "rumah tangga"],
     "Kecepatan Proses": [
         "lama", "lambat", "cepat", "lelet", "tunggu", "antri",
@@ -30,6 +41,7 @@ KATEGORI_KEYWORDS = {
     "Kemudahan Aplikasi": [
         "mudah", "susah", "ribet", "bingung", "sulit", "gampang",
         "simpel", "fitur", "menu", "tampilan", "navigasi", "ux",
+        "memudahkan", "mempermudah", "permudah", "dimudahkan",
     ],
     "Error / Bug": [
         "error", "crash", "bug", "tidak bisa", "gagal", "force close",
@@ -44,12 +56,41 @@ KATEGORI_KEYWORDS = {
         "bagus", "baik", "mantap", "keren", "membantu", "top", "hebat",
         "sangat baik", "terbaik", "solusi", "inovasi", "bermanfaat", "rekomendasi",
     ],
-    "Login / Akun": ["login", "akun", "masuk", "daftar", "registrasi", "kata sandi", "password"],
+    "Login / Akun": [
+        "login", "akun", "daftar", "registrasi", "kata sandi", "password",
+        "gagal masuk", "susah masuk", "sulit masuk", "tidak bisa masuk",
+    ],
     "Update / Versi": ["update", "versi", "perbarui", "pembaharuan"],
+    "Keluhan Umum": [
+        "jelek", "buruk", "payah", "parah", "kecewa", "receh", "tidak bagus",
+        "tidak baik", "tidak puas", "becus",
+    ],
 }
+
+# Kategori yang bermakna positif: tidak boleh terpicu bila didahului negasi
+KATEGORI_POSITIF = {"Pujian Umum"}
+NEGASI = r"(?:tidak|tak|kurang|belum|gak|ga|nggak|bukan|kok)"
+
+
+def _pola(kw: str) -> re.Pattern:
+    """Kata <=3 huruf dicocokkan utuh (hindari 'nik' di 'elektronik', 'top' di 'stop').
+    Kata lebih panjang dicocokkan dari awal kata, sehingga 'proses' tetap cocok
+    dengan 'prosesnya'."""
+    esc = re.escape(kw)
+    if len(kw) <= 3:
+        return re.compile(rf"\b{esc}\b")
+    return re.compile(rf"\b{esc}")
+
+
+def _pola_negasi(kw: str) -> re.Pattern:
+    return re.compile(rf"\b{NEGASI}\s+(?:\w+\s+)?{re.escape(kw)}")
+
+
+POLA = {k: [(_pola(kw), _pola_negasi(kw)) for kw in kws] for k, kws in KATEGORI_KEYWORDS.items()}
 
 
 def label_sentimen(score: int) -> str:
+    """Sentimen berbasis rating bintang (BUKAN analisis teks)."""
     if score >= 4:
         return "Positif"
     if score == 3:
@@ -57,67 +98,108 @@ def label_sentimen(score: int) -> str:
     return "Negatif"
 
 
-def kategorisasi(teks: str) -> str:
+def daftar_kategori(teks) -> list:
     if not isinstance(teks, str) or not teks.strip():
-        return "Lainnya"
-    teks_lower = teks.lower()
-    hasil = [kat for kat, kws in KATEGORI_KEYWORDS.items() if any(kw in teks_lower for kw in kws)]
-    return ", ".join(hasil) if hasil else "Lainnya"
+        return ["Lainnya"]
+    t = teks.lower()
+    hasil = []
+    for kat, pola_list in POLA.items():
+        for p, p_neg in pola_list:
+            if p.search(t):
+                if kat in KATEGORI_POSITIF and p_neg.search(t):
+                    continue
+                hasil.append(kat)
+                break
+    return hasil if hasil else ["Lainnya"]
+
+
+def kategorisasi(teks) -> str:
+    return ", ".join(daftar_kategori(teks))
 
 
 def sanitize_for_json(obj):
-    """Ganti semua NaN/NaT/Inf menjadi None secara rekursif agar selalu valid JSON."""
     if isinstance(obj, dict):
         return {k: sanitize_for_json(v) for k, v in obj.items()}
     if isinstance(obj, list):
         return [sanitize_for_json(v) for v in obj]
     if isinstance(obj, float) and (pd.isna(obj) or obj in (float("inf"), float("-inf"))):
         return None
-    if pd.isna(obj) if not isinstance(obj, (list, dict)) else False:
+    if not isinstance(obj, (list, dict)) and pd.isna(obj):
         return None
     return obj
 
 
+def bangun_tabel_ulasan(df: pd.DataFrame) -> pd.DataFrame:
+    """Ubah hasil scraping mentah menjadi tabel ulasan bersih (tanpa nama pengguna)."""
+    out = pd.DataFrame()
+    out["review_id"] = df["reviewId"]
+    out["tanggal"] = pd.to_datetime(df["at"], errors="coerce")
+    out["bintang"] = df["score"].astype(int)
+    out["sentimen"] = out["bintang"].apply(label_sentimen)
+    out["kategori"] = df["content"].apply(kategorisasi)
+    out["isi"] = df["content"].str.replace(r"\s+", " ", regex=True).str.strip()
+    out["jumlah_kata"] = out["isi"].str.split().str.len()
+    out["likes"] = df["thumbsUpCount"].fillna(0).astype(int)
+    out["versi"] = df["reviewCreatedVersion"]
+    out["ada_balasan"] = df["replyContent"].notna()
+    out["tanggal_balasan"] = pd.to_datetime(df.get("repliedAt"), errors="coerce")
+    out["hari_balas"] = (out["tanggal_balasan"] - out["tanggal"]).dt.total_seconds() / 86400
+    out["hari_balas"] = out["hari_balas"].round(1)
+    out["isi_balasan"] = df["replyContent"]
+    out["tahun"] = out["tanggal"].dt.year
+    return out
+
+
+def gabung_dengan_arsip(baru: pd.DataFrame) -> pd.DataFrame:
+    """Gabungkan dengan reviews.csv lama agar ulasan yang pernah terambil tidak hilang."""
+    if os.path.exists(REVIEWS_CSV):
+        lama = pd.read_csv(REVIEWS_CSV, parse_dates=["tanggal", "tanggal_balasan"])
+        lama["ada_balasan"] = lama["ada_balasan"].astype(bool)
+        gabung = pd.concat([lama, baru], ignore_index=True)
+        gabung = gabung.drop_duplicates(subset=["review_id"], keep="last")  # data terbaru menang
+    else:
+        gabung = baru
+    return gabung.sort_values("tanggal", ascending=False).reset_index(drop=True)
+
+
 def main() -> None:
+    from google_play_scraper import Sort, app, reviews  # impor di sini agar fungsi lain bisa diuji offline
+
     now_wita = datetime.now(WITA)
     print(f"[{now_wita.strftime('%Y-%m-%d %H:%M WITA')}] Mulai scraping aplikasi: {APP_ID}")
+    os.makedirs(OUT_DIR, exist_ok=True)
 
-    # ── Info aplikasi ─────────────────────────────────────────────────────
     info = app(APP_ID, lang="id", country="id")
-
-    # ── Scraping review ───────────────────────────────────────────────────
     result, _ = reviews(
-        APP_ID,
-        lang="id",
-        country="id",
-        sort=Sort.NEWEST,
-        count=MAX_REVIEWS,
-        filter_score_with=None,
+        APP_ID, lang="id", country="id", sort=Sort.NEWEST,
+        count=MAX_REVIEWS, filter_score_with=None,
     )
-    df = pd.DataFrame(result)
-    print(f"Berhasil mengambil {len(df)} review mentah")
+    mentah = pd.DataFrame(result)
+    print(f"Berhasil mengambil {len(mentah)} review mentah")
 
-    # ── Cleaning ──────────────────────────────────────────────────────────
-    df = df.drop_duplicates(subset=["reviewId"])
-    df = df[df["content"].notna() & (df["content"].str.strip() != "")]
-    df["Sentimen"] = df["score"].apply(label_sentimen)
-    df["Kategori"] = df["content"].apply(kategorisasi)
-    df["AdaBalasan"] = df["replyContent"].notna()
-    df["tanggal_dt"] = pd.to_datetime(df["at"], errors="coerce")
-    df["tahun"] = df["tanggal_dt"].dt.year
+    mentah = mentah.drop_duplicates(subset=["reviewId"])
+    mentah = mentah[mentah["content"].notna() & (mentah["content"].str.strip() != "")]
 
+    # ── Tabel ulasan (akumulatif) + tabel jembatan kategori ───────────────
+    df = gabung_dengan_arsip(bangun_tabel_ulasan(mentah))
     total_n = len(df)
-    print(f"Data bersih: {total_n} review")
+    print(f"Data bersih (akumulatif): {total_n} review")
 
-    # ── Statistik agregat ─────────────────────────────────────────────────
+    df.to_csv(REVIEWS_CSV, index=False, encoding="utf-8-sig")  # utf-8-sig: aman dibuka di Excel/Power BI
+    jembatan = (
+        df[["review_id", "kategori"]]
+        .assign(kategori=lambda d: d["kategori"].str.split(", "))
+        .explode("kategori")
+    )
+    jembatan.to_csv(KATEGORI_CSV, index=False, encoding="utf-8-sig")
+
+    # ── Agregat untuk data.json (skema sama seperti sebelumnya) ───────────
     distribusi_bintang = (
-        df["score"].value_counts().sort_index().reindex(range(1, 6), fill_value=0).to_dict()
+        df["bintang"].value_counts().sort_index().reindex(range(1, 6), fill_value=0).to_dict()
     )
-    distribusi_sentimen = df["Sentimen"].value_counts().to_dict()
+    distribusi_sentimen = df["sentimen"].value_counts().to_dict()
 
-    tren_tahun = (
-        df.groupby(["tahun", "Sentimen"]).size().unstack(fill_value=0).sort_index()
-    )
+    tren_tahun = df.groupby(["tahun", "sentimen"]).size().unstack(fill_value=0).sort_index()
     tren_per_tahun = [
         {
             "tahun": int(tahun),
@@ -128,42 +210,22 @@ def main() -> None:
         for tahun, row in tren_tahun.iterrows()
         if not pd.isna(tahun)
     ]
-
     avg_bintang_per_tahun = (
-        df.dropna(subset=["tahun"]).groupby("tahun")["score"].mean().round(2).to_dict()
+        df.dropna(subset=["tahun"]).groupby("tahun")["bintang"].mean().round(2).to_dict()
     )
     avg_bintang_per_tahun = {int(k): v for k, v in avg_bintang_per_tahun.items()}
 
-    semua_kategori = [c.strip() for cats in df["Kategori"] for c in cats.split(", ")]
-    freq_kategori = dict(Counter(semua_kategori).most_common())
-
-    balasan_counts = df["AdaBalasan"].value_counts()
+    freq_kategori = dict(Counter(jembatan["kategori"]).most_common())
     responsivitas = {
-        "Ya": int(balasan_counts.get(True, 0)),
-        "Tidak": int(balasan_counts.get(False, 0)),
+        "Ya": int(df["ada_balasan"].sum()),
+        "Tidak": int((~df["ada_balasan"]).sum()),
     }
 
-    tanggal_min = df["tanggal_dt"].min()
-    tanggal_max = df["tanggal_dt"].max()
+    sample = df.head(20)[["isi", "bintang", "tanggal", "likes", "versi"]].copy()
+    sample["tanggal"] = sample["tanggal"].astype(str)
+    sample = sample.where(pd.notnull(sample), None)
+    sample_reviews = sample.rename(columns={"isi": "isi"}).to_dict(orient="records")
 
-    # ── Sample review terbaru (untuk tabel di dashboard) ─────────────────
-    sample_cols = ["userName", "content", "score", "at", "thumbsUpCount", "reviewCreatedVersion"]
-    df_sample = df.sort_values("at", ascending=False)[sample_cols].head(20).copy()
-    df_sample["at"] = df_sample["at"].astype(str)
-    # Ganti semua NaN/NaT dengan None agar valid sebagai JSON (NaN bukan JSON yang sah)
-    df_sample = df_sample.where(pd.notnull(df_sample), None)
-    sample_reviews = df_sample.rename(
-        columns={
-            "userName": "nama",
-            "content": "isi",
-            "score": "bintang",
-            "at": "tanggal",
-            "thumbsUpCount": "likes",
-            "reviewCreatedVersion": "versi",
-        }
-    ).to_dict(orient="records")
-
-    # ── Susun JSON output ─────────────────────────────────────────────────
     output = {
         "last_updated": now_wita.isoformat(),
         "app_info": {
@@ -175,11 +237,11 @@ def main() -> None:
             "installs": info.get("installs"),
         },
         "periode": {
-            "mulai": tanggal_min.strftime("%Y-%m-%d") if pd.notna(tanggal_min) else None,
-            "selesai": tanggal_max.strftime("%Y-%m-%d") if pd.notna(tanggal_max) else None,
+            "mulai": df["tanggal"].min().strftime("%Y-%m-%d"),
+            "selesai": df["tanggal"].max().strftime("%Y-%m-%d"),
         },
         "total_review": total_n,
-        "rata_rata_bintang": round(df["score"].mean(), 2) if total_n else 0,
+        "rata_rata_bintang": round(df["bintang"].mean(), 2) if total_n else 0,
         "distribusi_bintang": distribusi_bintang,
         "distribusi_sentimen": distribusi_sentimen,
         "tren_per_tahun": tren_per_tahun,
@@ -188,13 +250,11 @@ def main() -> None:
         "responsivitas_developer": responsivitas,
         "sample_reviews": sample_reviews,
     }
-
     output = sanitize_for_json(output)
-
     with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
         json.dump(output, f, ensure_ascii=False, indent=2, allow_nan=False)
 
-    print(f"[{now_wita.strftime('%Y-%m-%d %H:%M WITA')}] Data berhasil disimpan ke {OUTPUT_PATH}")
+    print(f"Selesai. Ditulis: {OUTPUT_PATH}, {REVIEWS_CSV}, {KATEGORI_CSV}")
 
 
 if __name__ == "__main__":
