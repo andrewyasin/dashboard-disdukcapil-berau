@@ -1,16 +1,16 @@
 {
-  "last_updated": "2026-11-11T09:44:58.596882+08:00",
+  "last_updated": "2026-11-12T10:44:41.139211+08:00",
   "app_info": {
     "title": "DISDUKCAPIL BERAU",
     "developer": "DISDUKCAPIL BERAU",
-    "score": 4.1,
-    "ratings": 817,
+    "score": 4.07,
+    "ratings": 818,
     "version": "4.0.0",
     "installs": "100.000+"
   },
   "periode": {
     "mulai": "2019-11-11",
-    "selesai": "2026-09-09"
+    "selesai": "2026-11-11"
   },
   "total_review": 471,
   "rata_rata_bintang": 3.87,
@@ -61,7 +61,7 @@
       "tahun": 2024,
       "Positif": 9,
       "Netral": 2,
-      "Negatif": 9
+      "Negatif": 8
     },
     {
       "tahun": 2025,
@@ -73,7 +73,7 @@
       "tahun": 2026,
       "Positif": 9,
       "Netral": 0,
-      "Negatif": 3
+      "Negatif": 4
     }
   ],
   "avg_bintang_per_tahun": {
@@ -82,18 +82,18 @@
     "2021": 3.38,
     "2022": 3.88,
     "2023": 3.67,
-    "2024": 2.95,
+    "2024": 3.05,
     "2025": 3.6,
-    "2026": 3.92
+    "2026": 3.69
   },
   "frekuensi_kategori": {
     "Pujian Umum": 207,
-    "Lainnya": 94,
+    "Lainnya": 93,
     "Kemudahan Aplikasi": 89,
     "Kecepatan Proses": 75,
     "Pelayanan": 68,
-    "Error / Bug": 54,
-    "Login / Akun": 43,
+    "Error / Bug": 55,
+    "Login / Akun": 44,
     "Dokumen": 37,
     "Update / Versi": 33,
     "KTP / e-KTP": 24,
@@ -106,6 +106,13 @@
     "Tidak": 410
   },
   "sample_reviews": [
+    {
+      "isi": "sakit kepala mungkin 20 kali gagal percobaan.... mungkin salah nya dimna gagal terus ... dipersulit daftar online Aq cape ulang smpe 20 kali lebihh",
+      "bintang": 1,
+      "tanggal": "2026-11-11 00:51:29",
+      "likes": 0,
+      "versi": "4.0.0"
+    },
     {
       "isi": "Terimakasih.. Segala urusan Dokumennya Lancar Sukses Terus DISDUKCAPIL Berau",
       "bintang": 5,
@@ -236,13 +243,6 @@
       "isi": "ttd elektrik online yg jdi kendala krn paling lama prosesnya, di luar negeri mungkin urusan bgini 5-10 menit kelar, klo di Indonesia khususnya Berau, pagi masukkan berkas, tutup layanan belum jadi jadi. entah ngapain aja kadisnya itu ttd elektronik aja nga kelar kelar",
       "bintang": 1,
       "tanggal": "2025-07-09 07:18:11",
-      "likes": 0,
-      "versi": "3.0.2"
-    },
-    {
-      "isi": "sangat membantu saya terima kasih *****",
-      "bintang": 5,
-      "tanggal": "2025-06-03 11:20:11",
       "likes": 0,
       "versi": "3.0.2"
     }

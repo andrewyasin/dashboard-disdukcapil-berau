@@ -1,4 +1,6 @@
 review_id,kategori,tanggal_date,bulan,tahun,bintang,sentimen,is_positif,is_negatif,dibalas
+10f8a062-1974-4bad-8e23-0e2486b3f1c9,Error / Bug,2026-11-11,2026-11-01,2026,1,Negatif,0,1,0
+10f8a062-1974-4bad-8e23-0e2486b3f1c9,Login / Akun,2026-11-11,2026-11-01,2026,1,Negatif,0,1,0
 2d0d3432-737d-4eeb-9a7a-baceac54ba08,Dokumen,2026-09-09,2026-09-01,2026,5,Positif,1,0,0
 8a678e3f-c5c7-4991-ac9b-6ef7631057ee,Kecepatan Proses,2026-07-17,2026-07-01,2026,5,Positif,1,0,0
 8a678e3f-c5c7-4991-ac9b-6ef7631057ee,Kemudahan Aplikasi,2026-07-17,2026-07-01,2026,5,Positif,1,0,0
@@ -52,7 +54,6 @@ f2125441-e067-40f3-b677-4d764fa6ccb5,Login / Akun,2025-03-06,2025-03-01,2025,3,N
 c3e595c5-5c4d-49a4-ac9f-8ddcd123a93b,Pujian Umum,2025-02-17,2025-02-01,2025,5,Positif,1,0,0
 8d28fd0c-d4b7-4d09-8872-3261aef87fe2,Kecepatan Proses,2025-01-20,2025-01-01,2025,1,Negatif,0,1,0
 8d28fd0c-d4b7-4d09-8872-3261aef87fe2,Login / Akun,2025-01-20,2025-01-01,2025,1,Negatif,0,1,0
-10f8a062-1974-4bad-8e23-0e2486b3f1c9,Lainnya,2024-12-19,2024-12-01,2024,1,Negatif,0,1,0
 6273a943-0297-4254-b2e0-1ed669c0f258,Error / Bug,2024-12-04,2024-12-01,2024,1,Negatif,0,1,0
 78014f2f-c179-4bb7-bc50-fb7d0ab884d0,Kecepatan Proses,2024-11-01,2024-11-01,2024,5,Positif,1,0,0
 78014f2f-c179-4bb7-bc50-fb7d0ab884d0,Pelayanan,2024-11-01,2024-11-01,2024,5,Positif,1,0,0
