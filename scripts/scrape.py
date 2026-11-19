@@ -15,11 +15,12 @@ walaupun nanti dihapus pengguna dari Play Store.
 
 import json
 import os
-import re
 from collections import Counter
 from datetime import datetime, timezone, timedelta
 
 import pandas as pd
+
+import nlp  # scripts/nlp.py: normalisasi, kamus kategori, skor model
 
 # ── KONFIGURASI ──────────────────────────────────────────────────────────────
 APP_ID = "com.disdukcapil.berau"
@@ -31,66 +32,6 @@ KATEGORI_LENGKAP_CSV = f"{OUT_DIR}/kategori_lengkap.csv"
 MAX_REVIEWS = 1000
 WITA = timezone(timedelta(hours=8))
 
-# ── KAMUS KATEGORI ───────────────────────────────────────────────────────────
-KATEGORI_KEYWORDS = {
-    "KTP / e-KTP": ["ktp", "e-ktp", "ktp digital", "kartu tanda penduduk", "nik"],
-    "Akta Kelahiran": ["akta", "akte", "kelahiran", "lahir", "bayi", "anak"],
-    "Kartu Keluarga": ["kk", "kartu keluarga", "anggota", "rumah tangga"],
-    "Kecepatan Proses": [
-        "lama", "lambat", "cepat", "lelet", "tunggu", "antri",
-        "proses", "menunggu", "nunggu", "instan", "segera", "kilat",
-    ],
-    "Kemudahan Aplikasi": [
-        "mudah", "susah", "ribet", "bingung", "sulit", "gampang",
-        "simpel", "fitur", "menu", "tampilan", "navigasi", "ux",
-        "memudahkan", "mempermudah", "permudah", "dimudahkan",
-    ],
-    "Error / Bug": [
-        "error", "crash", "bug", "tidak bisa", "gagal", "force close",
-        "loading", "macet", "blank", "kosong", "masalah", "kendala", "eror",
-    ],
-    "Pelayanan": [
-        "pelayanan", "petugas", "staff", "layanan", "respon",
-        "bantuan", "admin", "cs", "customer service", "call center",
-    ],
-    "Dokumen": ["dokumen", "berkas", "persyaratan", "syarat", "upload", "foto", "scan", "file"],
-    "Pujian Umum": [
-        "bagus", "baik", "mantap", "keren", "membantu", "top", "hebat",
-        "sangat baik", "terbaik", "solusi", "inovasi", "bermanfaat", "rekomendasi",
-    ],
-    "Login / Akun": [
-        "login", "akun", "daftar", "registrasi", "kata sandi", "password",
-        "gagal masuk", "susah masuk", "sulit masuk", "tidak bisa masuk",
-    ],
-    "Update / Versi": ["update", "versi", "perbarui", "pembaharuan"],
-    "Keluhan Umum": [
-        "jelek", "buruk", "payah", "parah", "kecewa", "receh", "tidak bagus",
-        "tidak baik", "tidak puas", "becus",
-    ],
-}
-
-# Kategori yang bermakna positif: tidak boleh terpicu bila didahului negasi
-KATEGORI_POSITIF = {"Pujian Umum"}
-NEGASI = r"(?:tidak|tak|kurang|belum|gak|ga|nggak|bukan|kok)"
-
-
-def _pola(kw: str) -> re.Pattern:
-    """Kata <=3 huruf dicocokkan utuh (hindari 'nik' di 'elektronik', 'top' di 'stop').
-    Kata lebih panjang dicocokkan dari awal kata, sehingga 'proses' tetap cocok
-    dengan 'prosesnya'."""
-    esc = re.escape(kw)
-    if len(kw) <= 3:
-        return re.compile(rf"\b{esc}\b")
-    return re.compile(rf"\b{esc}")
-
-
-def _pola_negasi(kw: str) -> re.Pattern:
-    return re.compile(rf"\b{NEGASI}\s+(?:\w+\s+)?{re.escape(kw)}")
-
-
-POLA = {k: [(_pola(kw), _pola_negasi(kw)) for kw in kws] for k, kws in KATEGORI_KEYWORDS.items()}
-
-
 def label_sentimen(score: int) -> str:
     """Sentimen berbasis rating bintang (BUKAN analisis teks)."""
     if score >= 4:
@@ -98,25 +39,6 @@ def label_sentimen(score: int) -> str:
     if score == 3:
         return "Netral"
     return "Negatif"
-
-
-def daftar_kategori(teks) -> list:
-    if not isinstance(teks, str) or not teks.strip():
-        return ["Lainnya"]
-    t = teks.lower()
-    hasil = []
-    for kat, pola_list in POLA.items():
-        for p, p_neg in pola_list:
-            if p.search(t):
-                if kat in KATEGORI_POSITIF and p_neg.search(t):
-                    continue
-                hasil.append(kat)
-                break
-    return hasil if hasil else ["Lainnya"]
-
-
-def kategorisasi(teks) -> str:
-    return ", ".join(daftar_kategori(teks))
 
 
 def sanitize_for_json(obj):
@@ -138,7 +60,7 @@ def bangun_tabel_ulasan(df: pd.DataFrame) -> pd.DataFrame:
     out["tanggal"] = pd.to_datetime(df["at"], errors="coerce")
     out["bintang"] = df["score"].astype(int)
     out["sentimen"] = out["bintang"].apply(label_sentimen)
-    out["kategori"] = df["content"].apply(kategorisasi)
+    out["kategori"] = df["content"].apply(nlp.kategorisasi)
     out["isi"] = df["content"].str.replace(r"\s+", " ", regex=True).str.strip()
     out["jumlah_kata"] = out["isi"].str.split().str.len()
     out["likes"] = df["thumbsUpCount"].fillna(0).astype(int)
@@ -161,7 +83,7 @@ def lengkapi_turunan(df: pd.DataFrame) -> pd.DataFrame:
     df["tanggal_balasan"] = pd.to_datetime(df["tanggal_balasan"], errors="coerce")
     df["ada_balasan"] = df["ada_balasan"].astype(bool)
     df["sentimen"] = df["bintang"].astype(int).apply(label_sentimen)
-    df["kategori"] = df["isi"].apply(kategorisasi)
+    df["kategori"] = df["isi"].apply(nlp.kategorisasi)
     df["jumlah_kata"] = df["isi"].fillna("").str.split().str.len()
     df["tahun"] = df["tanggal"].dt.year
     # Kolom ramah Looker Studio: tanggal murni, awal bulan, dan penanda numerik 1/0
@@ -173,9 +95,20 @@ def lengkapi_turunan(df: pd.DataFrame) -> pd.DataFrame:
     df["is_negatif"] = (df["sentimen"] == "Negatif").astype(int)
     df["skor_sentimen"] = df["is_positif"] - df["is_negatif"]  # rata-ratanya = net sentiment
     df["negatif_dibalas"] = ((df["sentimen"] == "Negatif") & df["ada_balasan"]).astype(int)
+    # Model teks: p_negatif = peluang ulasan bernada negatif (lihat scripts/nlp.py)
+    df = nlp.skor_negatif(df)
+    ada = df["p_negatif"].notna()
+    df["sentimen_teks"] = None
+    df.loc[ada, "sentimen_teks"] = (df.loc[ada, "p_negatif"] >= 0.5).map({True: "Negatif", False: "Bukan negatif"})
+    df["kesesuaian"] = None
+    df.loc[ada, "kesesuaian"] = "Sesuai"
+    df.loc[ada & (df["bintang"] >= 4) & (df["p_negatif"] >= 0.5), "kesesuaian"] = "Keluhan di rating tinggi"
+    df.loc[ada & (df["bintang"] <= 2) & (df["p_negatif"] < 0.2), "kesesuaian"] = "Pujian di rating rendah"
+    df["keluhan_tersembunyi"] = (df["kesesuaian"] == "Keluhan di rating tinggi").astype(int)
     kolom = [
         "review_id", "tanggal", "tanggal_date", "bulan", "tahun", "bintang", "sentimen",
-        "is_positif", "is_negatif", "skor_sentimen", "kategori", "isi", "jumlah_kata",
+        "is_positif", "is_negatif", "skor_sentimen", "p_negatif", "sentimen_teks", "kesesuaian",
+        "keluhan_tersembunyi", "kategori", "isi", "jumlah_kata",
         "likes", "versi", "ada_balasan", "status_balasan", "dibalas", "negatif_dibalas",
         "tanggal_balasan", "hari_balas", "isi_balasan",
     ]
@@ -291,6 +224,7 @@ def main() -> None:
         "avg_bintang_per_tahun": avg_bintang_per_tahun,
         "frekuensi_kategori": freq_kategori,
         "responsivitas_developer": responsivitas,
+        "keluhan_tersembunyi": int(df["keluhan_tersembunyi"].sum()),
         "sample_reviews": sample_reviews,
     }
     output = sanitize_for_json(output)
